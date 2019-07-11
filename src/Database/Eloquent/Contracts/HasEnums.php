@@ -2,43 +2,43 @@
 
 namespace Codification\Common\Database\Eloquent\Contracts
 {
-	use Codification\Common\Enums\Enum;
+	use Codification\Common\Support\Enum;
 
 	/**
-	 * @property string[]|\Codification\Common\Enums\Enum[] $enums
+	 * @property string[]|\Codification\Common\Support\Enum[] $enums
 	 */
 	interface HasEnums
 	{
 		/**
 		 * @param string $key
 		 *
-		 * @return mixed|\Codification\Common\Enums\Enum
+		 * @return mixed|\Codification\Common\Support\Enum
 		 */
 		public function getAttributeValue($key);
 
 		/**
-		 * @param string                                $key
-		 * @param mixed|\Codification\Common\Enums\Enum $value
+		 * @param string                                  $key
+		 * @param mixed|\Codification\Common\Support\Enum $value
 		 *
 		 * @return mixed
 		 */
 		public function setAttribute($key, $value);
 
 		/**
-		 * @return string[]|\Codification\Common\Enums\Enum[]
+		 * @return string[]|\Codification\Common\Support\Enum[]
 		 */
 		public function getEnums() : array;
 
 		/**
-		 * @param int|string                             $value
-		 * @param string|\Codification\Common\Enums\Enum $enum
+		 * @param int|string                               $value
+		 * @param string|\Codification\Common\Support\Enum $enum
 		 *
-		 * @return \Codification\Common\Enums\Enum
+		 * @return \Codification\Common\Support\Enum
 		 */
 		public function asEnum($value, string $enum) : Enum;
 
 		/**
-		 * @param \Codification\Common\Enums\Enum
+		 * @param \Codification\Common\Support\Enum
 		 *
 		 * @return int|string
 		 */

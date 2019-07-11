@@ -1,7 +1,8 @@
 <?php
 
-namespace Codification\Common\Enums
+namespace Codification\Common\Support
 {
+	use Codification\Common\Validation\Rules;
 	use Illuminate\Database\Eloquent\Builder;
 
 	abstract class Enum implements \JsonSerializable
@@ -43,8 +44,8 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum|int|string $enum
-		 * @param bool                                       $strict
+		 * @param \Codification\Common\Support\Enum|int|string $enum
+		 * @param bool                                         $strict
 		 *
 		 * @return bool
 		 */
@@ -59,8 +60,8 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum|int|string $enum
-		 * @param bool                                       $strict
+		 * @param \Codification\Common\Support\Enum|int|string $enum
+		 * @param bool                                         $strict
 		 *
 		 * @return bool
 		 */
@@ -97,7 +98,7 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum $enum
+		 * @param \Codification\Common\Support\Enum $enum
 		 *
 		 * @return void
 		 */
@@ -216,6 +217,16 @@ namespace Codification\Common\Enums
 		}
 
 		/**
+		 * @param bool $strict
+		 *
+		 * @return \Codification\Common\Validation\Rules\Enum
+		 */
+		public static function rule(bool $strict = true) : Rules\Enum
+		{
+			return new Rules\Enum(get_called_class(), $strict);
+		}
+
+		/**
 		 * @param \Illuminate\Database\Eloquent\Builder $builder
 		 * @param string                                $column
 		 *
@@ -237,10 +248,10 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param \Illuminate\Database\Eloquent\Builder      $builder
-		 * @param string                                     $column
-		 * @param \Codification\Common\Enums\Enum|int|string $value
-		 * @param string                                     $boolean
+		 * @param \Illuminate\Database\Eloquent\Builder        $builder
+		 * @param string                                       $column
+		 * @param \Codification\Common\Support\Enum|int|string $value
+		 * @param string                                       $boolean
 		 *
 		 * @return \Illuminate\Database\Eloquent\Builder
 		 */

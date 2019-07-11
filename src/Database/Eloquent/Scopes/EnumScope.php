@@ -3,7 +3,7 @@
 namespace Codification\Common\Database\Eloquent\Scopes
 {
 	use Codification\Common\Enums\Concerns\EnumFlags;
-	use Codification\Common\Enums\Enum;
+	use Codification\Common\Support\Enum;
 	use Illuminate\Database\Eloquent\Scope;
 	use Illuminate\Database\Eloquent\Builder;
 	use Illuminate\Database\Eloquent\Model;

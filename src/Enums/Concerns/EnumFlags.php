@@ -3,7 +3,7 @@
 namespace Codification\Common\Enums\Concerns
 {
 	/**
-	 * @mixin \Codification\Common\Enums\Enum
+	 * @mixin \Codification\Common\Support\Enum
 	 */
 	trait EnumFlags
 	{
@@ -39,7 +39,7 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum $enum
+		 * @param \Codification\Common\Support\Enum $enum
 		 *
 		 * @return bool
 		 */
@@ -51,8 +51,8 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum|\Codification\Common\Enums\Enum[] $enums
-		 * @param \Codification\Common\Enums\Enum[]                                 $_
+		 * @param \Codification\Common\Support\Enum|\Codification\Common\Support\Enum[] $enums
+		 * @param \Codification\Common\Support\Enum[]                                   $_
 		 *
 		 * @return $this
 		 */
@@ -71,8 +71,8 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum|\Codification\Common\Enums\Enum[] $enums
-		 * @param \Codification\Common\Enums\Enum[]                                 $_
+		 * @param \Codification\Common\Support\Enum|\Codification\Common\Support\Enum[] $enums
+		 * @param \Codification\Common\Support\Enum[]                                   $_
 		 *
 		 * @return $this
 		 */

@@ -3,7 +3,7 @@
 namespace Codification\Common\Database\Eloquent\Concerns
 {
 	use Codification\Common\Database\Eloquent\Scopes\EnumScope;
-	use Codification\Common\Enums\Enum;
+	use Codification\Common\Support\Enum;
 
 	/**
 	 * @mixin \Codification\Common\Database\Eloquent\Contracts\HasEnums
@@ -23,7 +23,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		/**
 		 * @param string $key
 		 *
-		 * @return mixed|\Codification\Common\Enums\Enum
+		 * @return mixed|\Codification\Common\Support\Enum
 		 */
 		public function getAttributeValue($key)
 		{
@@ -39,8 +39,8 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param string                                $key
-		 * @param mixed|\Codification\Common\Enums\Enum $value
+		 * @param string                                  $key
+		 * @param mixed|\Codification\Common\Support\Enum $value
 		 *
 		 * @return mixed
 		 */
@@ -58,7 +58,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @return string[]|\Codification\Common\Enums\Enum[]
+		 * @return string[]|\Codification\Common\Support\Enum[]
 		 */
 		public function getEnums() : array
 		{
@@ -66,10 +66,10 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param int|string                             $value
-		 * @param string|\Codification\Common\Enums\Enum $enum
+		 * @param int|string                               $value
+		 * @param string|\Codification\Common\Support\Enum $enum
 		 *
-		 * @return \Codification\Common\Enums\Enum
+		 * @return \Codification\Common\Support\Enum
 		 */
 		public function asEnum($value, string $enum) : Enum
 		{
@@ -77,7 +77,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\Enum $enum
+		 * @param \Codification\Common\Support\Enum $enum
 		 *
 		 * @return int|string
 		 */

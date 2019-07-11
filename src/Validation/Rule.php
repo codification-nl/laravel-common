@@ -13,8 +13,8 @@ namespace Codification\Common\Validation
 		}
 
 		/**
-		 * @param string|\Codification\Common\Enums\Enum $enum
-		 * @param bool                                   $strict
+		 * @param string|\Codification\Common\Support\Enum $enum
+		 * @param bool                                     $strict
 		 *
 		 * @return \Codification\Common\Validation\Rules\Enum
 		 */

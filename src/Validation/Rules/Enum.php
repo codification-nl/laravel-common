@@ -7,15 +7,15 @@ namespace Codification\Common\Validation\Rules
 
 	class Enum implements ValidatorRule
 	{
-		/** @var \Codification\Common\Enums\Enum */
+		/** @var \Codification\Common\Support\Enum */
 		protected $enum;
 
 		/** @var bool */
 		protected $strict;
 
 		/**
-		 * @param string|\Codification\Common\Enums\Enum $enum
-		 * @param bool                                   $strict
+		 * @param string|\Codification\Common\Support\Enum $enum
+		 * @param bool                                     $strict
 		 */
 		public function __construct(string $enum, bool $strict = true)
 		{
@@ -33,7 +33,7 @@ namespace Codification\Common\Validation\Rules
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{
-			/** @var \Codification\Common\Enums\Enum $enum */
+			/** @var \Codification\Common\Support\Enum $enum */
 			[$enum, $strict] = $parameters;
 
 			return $enum::isValid($value, boolval($strict));

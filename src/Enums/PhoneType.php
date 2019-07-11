@@ -2,6 +2,8 @@
 
 namespace Codification\Common\Enums
 {
+	use Codification\Common\Support\Enum;
+
 	/**
 	 * @method static PhoneType|int NONE()
 	 * @method static PhoneType|int FIXED()
