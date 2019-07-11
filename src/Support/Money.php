@@ -30,9 +30,6 @@ namespace Codification\Common\Support
 		/** @var \Money\Currency[] */
 		private $currencies = [];
 
-		/** @var string[] */
-		private $currencySymbols = [];
-
 		private function __construct()
 		{
 			$this->isoCurrencies    = new ISOCurrencies();
@@ -84,47 +81,20 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string $symbol
+		 * @param string $code
 		 *
 		 * @return \Money\Currency
 		 */
-		private function getCurrency(string $symbol) : Currency
+		private function getCurrency(string $code) : Currency
 		{
-			$symbol = strtoupper($symbol);
+			$code = strtoupper($code);
 
-			if (!array_key_exists($symbol, $this->currencies))
+			if (!array_key_exists($code, $this->currencies))
 			{
-				$this->currencies[$symbol] = new Currency($symbol);
+				$this->currencies[$code] = new Currency($code);
 			}
 
-			return $this->currencies[$symbol];
-		}
-
-		/**
-		 * @param string|null $locale
-		 *
-		 * @return string
-		 */
-		private function getCurrencySymbol(string $locale = null) : string
-		{
-			$locale = sanitize($locale);
-
-			if ($locale === null)
-			{
-				$locale = App::getLocale();
-			}
-
-			$locale = strtolower($locale);
-
-			if (!array_key_exists($locale, $this->currencySymbols))
-			{
-				$formatter       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-				$currency_symbol = $formatter->getTextAttribute(\NumberFormatter::CURRENCY_SYMBOL);
-
-				$this->currencySymbols[$locale] = $currency_symbol;
-			}
-
-			return $this->currencySymbols[$locale];
+			return $this->currencies[$code];
 		}
 
 		/**
@@ -134,7 +104,7 @@ namespace Codification\Common\Support
 		 *
 		 * @return \Money\Money|null
 		 */
-		public static function parse($value, $currency = null, string $locale = null) : ?\Money\Money
+		public static function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{
 			$value  = sanitize($value);
 			$locale = sanitize($locale);
@@ -146,13 +116,15 @@ namespace Codification\Common\Support
 
 			$instance = static::getInstance();
 
-			if ($currency === null)
-			{
-				$currency = $instance->getCurrencySymbol($locale);
-			}
-
 			if (is_string($currency))
 			{
+				$currency = sanitize($currency);
+
+				if ($currency === null)
+				{
+					return null;
+				}
+
 				$currency = $instance->getCurrency($currency);
 			}
 
