@@ -51,11 +51,11 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string $locale
+		 * @param string|null $locale
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
 		 */
-		private function getParser(string $locale) : AggregateMoneyParser
+		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
 			$locale = sanitize($locale);
 
@@ -98,16 +98,15 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string|float|int|null       $value
-		 * @param string|\Money\Currency|null $currency
-		 * @param string|null                 $locale
+		 * @param string|float|int|null  $value
+		 * @param string|\Money\Currency $currency
+		 * @param string|null            $locale
 		 *
 		 * @return \Money\Money|null
 		 */
 		public static function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{
-			$value  = sanitize($value);
-			$locale = sanitize($locale);
+			$value = sanitize($value);
 
 			if ($value === null)
 			{
@@ -122,7 +121,7 @@ namespace Codification\Common\Support
 
 				if ($currency === null)
 				{
-					return null;
+					throw new \UnexpectedValueException();
 				}
 
 				$currency = $instance->getCurrency($currency);
