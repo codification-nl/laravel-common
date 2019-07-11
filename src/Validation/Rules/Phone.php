@@ -73,8 +73,14 @@ namespace Codification\Common\Validation\Rules
 				return false;
 			}
 
-			$country = Arr::get($data, $array[$key]);
-			$type    = PhoneType::make(intval($type));
+			$country = Arr::get($data, $array[$key], null);
+
+			if ($country === null)
+			{
+				return false;
+			}
+
+			$type = PhoneType::make(intval($type));
 
 			return \Codification\Common\Support\Phone::validate($value, $country, $type);
 		}
