@@ -15,13 +15,18 @@ namespace Codification\Common\Support
 		private $phoneNumber;
 
 		/**
-		 * @param string $number
-		 * @param string $country
+		 * @param string|null $number
+		 * @param string|null $country
 		 *
 		 * @throws \libphonenumber\NumberParseException
 		 */
-		private function __construct(?string $number, string $country)
+		private function __construct(?string $number, string $country = null)
 		{
+			if ($country === null)
+			{
+				$country = env('locale');
+			}
+
 			$this->util        = PhoneNumberUtil::getInstance();
 			$this->phoneNumber = $this->util->parse(sanitize($number), strtoupper($country));
 		}
@@ -42,13 +47,23 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\PhoneType $type
-		 * @param string                               $country
+		 * @param string|null                               $country
+		 * @param \Codification\Common\Enums\PhoneType|null $type
 		 *
 		 * @return bool
 		 */
-		public function isValid(PhoneType $type, string $country) : bool
+		public function isValid(string $country = null, PhoneType $type = null) : bool
 		{
+			if ($country === null)
+			{
+				$country = env('locale');
+			}
+
+			if ($type === null)
+			{
+				$type = PhoneType::BOTH();
+			}
+
 			switch ($this->util->getNumberType($this->phoneNumber))
 			{
 				case PhoneNumberType::FIXED_LINE_OR_MOBILE:
@@ -82,13 +97,13 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param null|string                          $number
-		 * @param string                               $country
-		 * @param \Codification\Common\Enums\PhoneType $type
+		 * @param null|string                               $number
+		 * @param \Codification\Common\Enums\PhoneType|null $type
+		 * @param string|null                               $country
 		 *
 		 * @return bool
 		 */
-		public static function validate(?string $number, string $country, PhoneType $type) : bool
+		public static function validate(?string $number, string $country = null, PhoneType $type = null) : bool
 		{
 			$phone = static::make($number, $country);
 
@@ -97,16 +112,16 @@ namespace Codification\Common\Support
 				return false;
 			}
 
-			return $phone->isValid($type, $country);
+			return $phone->isValid($country, $type);
 		}
 
 		/**
 		 * @param null|string $number
-		 * @param string      $country
+		 * @param string|null $country
 		 *
 		 * @return \Codification\Common\Support\Phone|null
 		 */
-		public static function make(?string $number, string $country) : Phone
+		public static function make(?string $number, string $country = null) : Phone
 		{
 			try
 			{
