@@ -71,15 +71,9 @@ namespace Codification\Common\Validation\Rules
 			[$country_field, $type] = $parameters;
 
 			$key   = sanitize($country_field) ?: "{$attribute}_country";
-			$data  = $validator->getData();
-			$array = Arr::dot($data);
+			$array = $validator->getData();
 
-			if (!array_key_exists($key, $array))
-			{
-				return false;
-			}
-
-			$country = Arr::get($data, $array[$key], null);
+			$country = Arr::get($array, $key, null);
 
 			if ($country === null)
 			{

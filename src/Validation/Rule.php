@@ -2,8 +2,6 @@
 
 namespace Codification\Common\Validation
 {
-	use Codification\Common\Validation\Contracts\ValidatorRule;
-
 	final class Rule
 	{
 		/**
@@ -38,7 +36,7 @@ namespace Codification\Common\Validation
 		/**
 		 * @return \Codification\Common\Validation\Rules\Period
 		 */
-		public static function period() : ValidatorRule
+		public static function period() : Rules\Period
 		{
 			return Rules\Period::make();
 		}
@@ -48,7 +46,7 @@ namespace Codification\Common\Validation
 		 *
 		 * @return \Codification\Common\Validation\Rules\Phone
 		 */
-		public static function phone(string $country_field = null) : ValidatorRule
+		public static function phone(string $country_field = null) : Rules\Phone
 		{
 			return Rules\Phone::make($country_field);
 		}
