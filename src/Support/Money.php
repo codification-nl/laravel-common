@@ -59,6 +59,8 @@ namespace Codification\Common\Support
 		 */
 		private function getParser(string $locale) : AggregateMoneyParser
 		{
+			$locale = sanitize($locale);
+
 			if ($locale === null)
 			{
 				$locale = env('locale');
@@ -104,6 +106,8 @@ namespace Codification\Common\Support
 		 */
 		private function getCurrencySymbol(string $locale = null) : string
 		{
+			$locale = sanitize($locale);
+
 			if ($locale === null)
 			{
 				$locale = env('locale');
@@ -131,7 +135,8 @@ namespace Codification\Common\Support
 		 */
 		public static function parse($value, $currency = null, string $locale = null) : ?\Money\Money
 		{
-			$value = sanitize($value);
+			$value  = sanitize($value);
+			$locale = sanitize($locale);
 
 			if ($value === null)
 			{

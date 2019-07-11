@@ -22,13 +22,18 @@ namespace Codification\Common\Support
 		 */
 		private function __construct(?string $number, string $country = null)
 		{
+			$number  = sanitize($number);
+			$country = sanitize($country);
+
 			if ($country === null)
 			{
 				$country = env('locale');
 			}
 
+			$country = strtoupper($country);
+
 			$this->util        = PhoneNumberUtil::getInstance();
-			$this->phoneNumber = $this->util->parse(sanitize($number), strtoupper($country));
+			$this->phoneNumber = $this->util->parse($number, $country);
 		}
 
 		/**
@@ -38,12 +43,16 @@ namespace Codification\Common\Support
 		 */
 		public function format(string $country = null) : string
 		{
+			$country = sanitize($country);
+
 			if ($country === null)
 			{
 				$country = env('locale');
 			}
 
-			return $this->util->formatOutOfCountryCallingNumber($this->phoneNumber, strtoupper($country));
+			$country = strtoupper($country);
+
+			return $this->util->formatOutOfCountryCallingNumber($this->phoneNumber, $country);
 		}
 
 		/**
@@ -54,10 +63,14 @@ namespace Codification\Common\Support
 		 */
 		public function isValid(string $country = null, PhoneType $type = null) : bool
 		{
+			$country = sanitize($country);
+
 			if ($country === null)
 			{
 				$country = env('locale');
 			}
+
+			$country = strtoupper($country);
 
 			if ($type === null)
 			{
@@ -93,7 +106,7 @@ namespace Codification\Common\Support
 					return false;
 			}
 
-			return $this->util->isValidNumberForRegion($this->phoneNumber, strtoupper($country));
+			return $this->util->isValidNumberForRegion($this->phoneNumber, $country);
 		}
 
 		/**
@@ -116,7 +129,7 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param null|string $number
+		 * @param string|null $number
 		 * @param string|null $country
 		 *
 		 * @return \Codification\Common\Support\Phone|null
