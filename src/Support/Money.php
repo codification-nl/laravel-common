@@ -29,6 +29,9 @@ namespace Codification\Common\Support
 		/** @var \Money\Currency[] */
 		private $currencies = [];
 
+		/** @var string[] */
+		private $currencySymbols = [];
+
 		private function __construct()
 		{
 			$this->isoCurrencies    = new ISOCurrencies();
@@ -54,12 +57,14 @@ namespace Codification\Common\Support
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
 		 */
-		private function getParser(string $locale = null) : AggregateMoneyParser
+		private function getParser(string $locale) : AggregateMoneyParser
 		{
 			if ($locale === null)
 			{
 				$locale = env('locale');
 			}
+
+			$locale = strtolower($locale);
 
 			if (!array_key_exists($locale, $this->parsers))
 			{
@@ -76,28 +81,55 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string $code
+		 * @param string $symbol
 		 *
 		 * @return \Money\Currency
 		 */
-		private function getCurrency(string $code) : Currency
+		private function getCurrency(string $symbol) : Currency
 		{
-			if (!array_key_exists($code, $this->currencies))
+			$symbol = strtoupper($symbol);
+
+			if (!array_key_exists($symbol, $this->currencies))
 			{
-				$this->currencies[$code] = new Currency($code);
+				$this->currencies[$symbol] = new Currency($symbol);
 			}
 
-			return $this->currencies[$code];
+			return $this->currencies[$symbol];
 		}
 
 		/**
-		 * @param string|null            $value
-		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param string|null $locale
+		 *
+		 * @return string
+		 */
+		private function getCurrencySymbol(string $locale = null) : string
+		{
+			if ($locale === null)
+			{
+				$locale = env('locale');
+			}
+
+			$locale = strtolower($locale);
+
+			if (!array_key_exists($locale, $this->currencySymbols))
+			{
+				$formatter       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+				$currency_symbol = $formatter->getTextAttribute(\NumberFormatter::CURRENCY_SYMBOL);
+
+				$this->currencySymbols[$locale] = $currency_symbol;
+			}
+
+			return $this->currencySymbols[$locale];
+		}
+
+		/**
+		 * @param string|float|int|null       $value
+		 * @param string|\Money\Currency|null $currency
+		 * @param string|null                 $locale
 		 *
 		 * @return \Money\Money|null
 		 */
-		public static function parse(?string $value, $currency, string $locale = null) : ?\Money\Money
+		public static function parse($value, $currency = null, string $locale = null) : ?\Money\Money
 		{
 			$value = sanitize($value);
 
@@ -107,6 +139,11 @@ namespace Codification\Common\Support
 			}
 
 			$instance = static::getInstance();
+
+			if ($currency === null)
+			{
+				$currency = $instance->getCurrencySymbol($locale);
+			}
 
 			if (is_string($currency))
 			{

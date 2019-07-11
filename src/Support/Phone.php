@@ -27,12 +27,17 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string $country
+		 * @param string|null $country
 		 *
 		 * @return string
 		 */
-		public function format(string $country) : string
+		public function format(string $country = null) : string
 		{
+			if ($country === null)
+			{
+				$country = env('locale');
+			}
+
 			return $this->util->formatOutOfCountryCallingNumber($this->phoneNumber, strtoupper($country));
 		}
 
