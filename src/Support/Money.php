@@ -4,6 +4,9 @@ namespace Codification\Common\Support
 {
 	use Codification\Common\Money\MoneyUtil;
 
+	/**
+	 * @mixin \Money\Money
+	 */
 	final class Money implements \JsonSerializable
 	{
 		/** @var \Money\Money */
@@ -56,6 +59,17 @@ namespace Codification\Common\Support
 		public function getCurrencyCode() : int
 		{
 			return $this->util->numericCodeFor($this->instance->getCurrency());
+		}
+
+		/**
+		 * @param string $name
+		 * @param array  $arguments
+		 *
+		 * @return mixed
+		 */
+		public function __call($name, $arguments)
+		{
+			return call_user_func_array([$this->instance, $name], $arguments);
 		}
 
 		/**
