@@ -6,7 +6,7 @@ namespace Codification\Common\Support
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
 
-	final class Phone
+	final class Phone implements \JsonSerializable
 	{
 		/** @var \libphonenumber\PhoneNumberUtil */
 		private $util;
@@ -121,7 +121,7 @@ namespace Codification\Common\Support
 		 *
 		 * @return \Codification\Common\Support\Phone|null
 		 */
-		public static function make(?string $number, string $country = null) : Phone
+		public static function make(?string $number, string $country = null) : ?Phone
 		{
 			try
 			{
@@ -132,6 +132,22 @@ namespace Codification\Common\Support
 			}
 
 			return null;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function __toString() : string
+		{
+			return $this->format();
+		}
+
+		/**
+		 * @return string
+		 */
+		public function jsonSerialize()
+		{
+			return $this->format();
 		}
 	}
 }
