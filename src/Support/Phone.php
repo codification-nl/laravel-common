@@ -3,6 +3,7 @@
 namespace Codification\Common\Support
 {
 	use Codification\Common\Enums\PhoneType;
+	use Illuminate\Support\Facades\App;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
 
@@ -27,7 +28,7 @@ namespace Codification\Common\Support
 
 			if ($country === null)
 			{
-				$country = env('locale');
+				$country = App::getLocale();
 			}
 
 			$country = strtoupper($country);
@@ -47,7 +48,7 @@ namespace Codification\Common\Support
 
 			if ($country === null)
 			{
-				$country = env('locale');
+				$country = App::getLocale();
 			}
 
 			$country = strtoupper($country);
@@ -67,7 +68,7 @@ namespace Codification\Common\Support
 
 			if ($country === null)
 			{
-				$country = env('locale');
+				$country = App::getLocale();
 			}
 
 			$country = strtoupper($country);

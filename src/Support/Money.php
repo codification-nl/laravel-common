@@ -2,6 +2,7 @@
 
 namespace Codification\Common\Support
 {
+	use Illuminate\Support\Facades\App;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -63,7 +64,7 @@ namespace Codification\Common\Support
 
 			if ($locale === null)
 			{
-				$locale = env('locale');
+				$locale = App::getLocale();
 			}
 
 			$locale = strtolower($locale);
@@ -110,7 +111,7 @@ namespace Codification\Common\Support
 
 			if ($locale === null)
 			{
-				$locale = env('locale');
+				$locale = App::getLocale();
 			}
 
 			$locale = strtolower($locale);
