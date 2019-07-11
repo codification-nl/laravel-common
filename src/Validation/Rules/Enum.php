@@ -16,22 +16,17 @@ namespace Codification\Common\Validation\Rules
 		/**
 		 * @param string|\Codification\Common\Support\Enum $enum
 		 * @param bool                                     $strict
-		 */
-		private function __construct(string $enum, bool $strict = true)
-		{
-			$this->enum   = $enum;
-			$this->strict = $strict;
-		}
-
-		/**
-		 * @param string|\Codification\Common\Support\Enum $enum
-		 * @param bool                                     $strict
 		 *
 		 * @return $this
 		 */
 		public static function make(string $enum, bool $strict = true) : self
 		{
-			return new static($enum, $strict);
+			$rule = new static();
+
+			$rule->enum   = $enum;
+			$rule->strict = $strict;
+
+			return $rule;
 		}
 
 		/**

@@ -7,11 +7,6 @@ namespace Codification\Common\Validation\Rules
 
 	class Country implements ValidatorRule
 	{
-		private function __construct()
-		{
-			//
-		}
-
 		/**
 		 * @return $this
 		 */

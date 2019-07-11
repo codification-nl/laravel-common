@@ -8,11 +8,6 @@ namespace Codification\Common\Validation\Rules
 
 	class Period implements ValidatorRule
 	{
-		private function __construct()
-		{
-			//
-		}
-
 		/**
 		 * @return $this
 		 */

@@ -17,21 +17,17 @@ namespace Codification\Common\Validation\Rules
 
 		/**
 		 * @param string|null $country_field
-		 */
-		public function __construct(string $country_field = null)
-		{
-			$this->countryField = $country_field;
-			$this->type         = PhoneType::BOTH();
-		}
-
-		/**
-		 * @param string|null $country_field
 		 *
 		 * @return $this
 		 */
 		public static function make(string $country_field = null) : self
 		{
-			return new static($country_field);
+			$rule = new static();
+
+			$rule->countryField = $country_field;
+			$rule->type         = PhoneType::BOTH();
+
+			return $rule;
 		}
 
 		/**
