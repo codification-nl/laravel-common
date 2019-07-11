@@ -8,6 +8,19 @@ namespace Codification\Common\Validation\Rules
 
 	class Period implements ValidatorRule
 	{
+		private function __construct()
+		{
+			//
+		}
+
+		/**
+		 * @return $this
+		 */
+		public static function make() : self
+		{
+			return new static();
+		}
+
 		/**
 		 * @param string                           $attribute
 		 * @param mixed                            $value

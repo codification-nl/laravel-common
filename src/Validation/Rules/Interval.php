@@ -11,9 +11,22 @@ namespace Codification\Common\Validation\Rules
 		/** @var bool */
 		protected $allowEmpty;
 
-		public function __construct(bool $allow_empty = false)
+		/**
+		 * @param bool $allow_empty
+		 */
+		private function __construct(bool $allow_empty = false)
 		{
 			$this->allowEmpty = $allow_empty;
+		}
+
+		/**
+		 * @param bool $allow_empty
+		 *
+		 * @return $this
+		 */
+		public static function make(bool $allow_empty = false) : self
+		{
+			return new static($allow_empty);
 		}
 
 		/**

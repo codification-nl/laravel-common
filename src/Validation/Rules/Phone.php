@@ -25,6 +25,16 @@ namespace Codification\Common\Validation\Rules
 		}
 
 		/**
+		 * @param string|null $country_field
+		 *
+		 * @return $this
+		 */
+		public static function make(string $country_field = null) : self
+		{
+			return new static($country_field);
+		}
+
+		/**
 		 * @return $this
 		 */
 		public function mobile() : self

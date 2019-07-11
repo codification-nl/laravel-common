@@ -223,7 +223,7 @@ namespace Codification\Common\Support
 		 */
 		public static function rule(bool $strict = true) : Rules\Enum
 		{
-			return new Rules\Enum(get_called_class(), $strict);
+			return Rules\Enum::make(get_called_class(), $strict);
 		}
 
 		/**
