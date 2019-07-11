@@ -1,0 +1,36 @@
+{
+	"name": "codification/laravel-common",
+	"description": "Common Laravel",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Kevin Wijsenbach",
+			"email": "kevin@codification.nl",
+			"homepage": "https://codification.nl",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^7.2",
+		"ext-intl": "*",
+		"ext-json": "*",
+		"giggsey/libphonenumber-for-php": "^8.10",
+		"illuminate/database": "5.8.*",
+		"illuminate/support": "5.8.*",
+		"illuminate/validation": "^5.8",
+		"league/iso3166": "^2.1",
+		"moneyphp/money": "^3.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Codification\\Common\\": "src"
+		},
+		"files": [
+			"src/helpers.php"
+		]
+	},
+	"config": {
+		"sort-packages": true
+	}
+}

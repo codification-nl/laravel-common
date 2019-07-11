@@ -1,0 +1,256 @@
+<?php
+
+namespace Codification\Common\Enums
+{
+	use Illuminate\Database\Eloquent\Builder;
+
+	abstract class Enum implements \JsonSerializable
+	{
+		/**
+		 * @var int|string
+		 */
+		protected $value;
+
+		/**
+		 * @var array[]
+		 */
+		protected static $cache = [];
+
+		/**
+		 * @var string[]
+		 */
+		protected static $hidden = [];
+
+		/**
+		 * @return int|string
+		 */
+		public function getValue()
+		{
+			return $this->value;
+		}
+
+		/**
+		 * @param int|string $value
+		 */
+		protected function __construct($value)
+		{
+			if (!static::isValid($value))
+			{
+				throw new \UnexpectedValueException(sprintf('Unexpected value \'%s\' for [%s]', $value, get_called_class()));
+			}
+
+			$this->value = $value;
+		}
+
+		/**
+		 * @param \Codification\Common\Enums\Enum|int|string $enum
+		 * @param bool                                       $strict
+		 *
+		 * @return bool
+		 */
+		public function equals($enum, bool $strict = true) : bool
+		{
+			if (!is_object($enum))
+			{
+				$enum = static::make($enum);
+			}
+
+			return ((!$strict || get_called_class() === get_class($enum)) && $this->value === $enum->value);
+		}
+
+		/**
+		 * @param \Codification\Common\Enums\Enum|int|string $enum
+		 * @param bool                                       $strict
+		 *
+		 * @return bool
+		 */
+		public function eq($enum, bool $strict = true) : bool
+		{
+			return $this->equals($enum, $strict);
+		}
+
+		/**
+		 * @param int|string $value
+		 * @param bool       $strict
+		 *
+		 * @return bool
+		 */
+		public static function isValid($value, bool $strict = true) : bool
+		{
+			return in_array($value, static::toArray(), $strict);
+		}
+
+		/**
+		 * @return int[]|string[]
+		 */
+		public static function values() : array
+		{
+			return array_values(static::toArray());
+		}
+
+		/**
+		 * @return string[]
+		 */
+		public static function names() : array
+		{
+			return array_diff(array_keys(static::toArray()), static::$hidden);
+		}
+
+		/**
+		 * @param \Codification\Common\Enums\Enum $enum
+		 *
+		 * @return void
+		 */
+		public static function assertType(Enum $enum) : void
+		{
+			$type  = get_called_class();
+			$other = get_class($enum);
+
+			if ($other !== $type)
+			{
+				throw new \UnexpectedValueException("[$other] !== [$type]");
+			}
+		}
+
+		/**
+		 * @return int[]|string[]
+		 */
+		public static function toArray() : array
+		{
+			$type = get_called_class();
+
+			if (!array_key_exists($type, static::$cache))
+			{
+				try
+				{
+					$reflection = new \ReflectionClass($type);
+				}
+				catch (\Exception $e)
+				{
+					throw new \RuntimeException("[$type] does not exist", 0, $e->getPrevious());
+				}
+
+				static::$cache[$type] = $reflection->getConstants();
+			}
+
+			return static::$cache[$type];
+		}
+
+		/**
+		 * @param int|string $value
+		 *
+		 * @return $this
+		 */
+		public static function make($value) : self
+		{
+			$value = static::initializeTraits($value);
+
+			return new static($value);
+		}
+
+		/**
+		 * @param int|string $value
+		 *
+		 * @return int|string
+		 */
+		private static function initializeTraits($value)
+		{
+			$class = static::class;
+
+			foreach (class_uses_recursive($class) as $trait)
+			{
+				$name   = class_basename($trait);
+				$method = "initialize{$name}";
+
+				if (method_exists($class, $method))
+				{
+					$value = forward_static_call([$class, $method], $value);
+				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * @param string $name
+		 *
+		 * @return $this
+		 */
+		public static function parse(string $name) : self
+		{
+			$values = static::toArray();
+
+			if (!array_key_exists($name, $values))
+			{
+				throw new \UnexpectedValueException(sprintf("'%s' does not exist in [%s]", $name, get_called_class()));
+			}
+
+			return new static($values[$name]);
+		}
+
+		/**
+		 * @param string $name
+		 * @param array  $arguments
+		 *
+		 * @return $this
+		 */
+		public static function __callStatic(string $name, array $arguments) : self
+		{
+			return static::parse($name);
+		}
+
+		/**
+		 * @return string
+		 */
+		public function __toString() : string
+		{
+			return $this->getValue();
+		}
+
+		/**
+		 * @return int|string
+		 */
+		public function jsonSerialize()
+		{
+			return $this->getValue();
+		}
+
+		/**
+		 * @param \Illuminate\Database\Eloquent\Builder $builder
+		 * @param string                                $column
+		 *
+		 * @return \Illuminate\Database\Eloquent\Builder
+		 */
+		public static function select(Builder $builder, string $column) : Builder
+		{
+			$query = $builder->getQuery();
+
+			if (count((array)$query->columns) === 0)
+			{
+				$builder->addSelect('*');
+			}
+
+			$wrapped = $query->grammar->wrap($builder->qualifyColumn($column));
+			$alias   = $query->grammar->wrap($column);
+
+			return $builder->selectRaw("({$wrapped} | 0) as {$alias}");
+		}
+
+		/**
+		 * @param \Illuminate\Database\Eloquent\Builder      $builder
+		 * @param string                                     $column
+		 * @param \Codification\Common\Enums\Enum|int|string $value
+		 * @param string                                     $boolean
+		 *
+		 * @return \Illuminate\Database\Eloquent\Builder
+		 */
+		public static function where(Builder $builder, string $column, $value, string $boolean = 'and') : Builder
+		{
+			$query = $builder->getQuery();
+
+			$wrapped = $query->grammar->wrap($builder->qualifyColumn($column));
+
+			return $builder->whereRaw("({$wrapped} & ?) != 0", [$value], $boolean);
+		}
+	}
+}
