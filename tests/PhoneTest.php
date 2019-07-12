@@ -50,24 +50,12 @@ namespace Codification\Common\Tests
 		public function it_can_validate()
 		{
 			$this->assertTrue(Phone::validate('0474-12-34-56', 'be', PhoneType::MOBILE()));
-			$this->assertFalse(Phone::validate('0474-12-34-56', 'be', PhoneType::FIXED()));
+			$this->assertNotTrue(Phone::validate('0474-12-34-56', 'be', PhoneType::FIXED()));
 			$this->assertTrue(Phone::validate('0474-12-34-56', 'be', PhoneType::BOTH()));
 
-			$this->assertFalse(Phone::validate('0474-12-34-56', 'nl', PhoneType::MOBILE()));
-			$this->assertFalse(Phone::validate('0474-12-34-56', 'nl', PhoneType::FIXED()));
-			$this->assertFalse(Phone::validate('0474-12-34-56', 'nl', PhoneType::BOTH()));
-		}
-
-		/** @test */
-		public function it_can_fail_validation()
-		{
-			$validator = Validator::make([
-				'phone' => '0474-12-34-56',
-			], [
-				'phone' => Rule::phone(),
-			]);
-
-			$this->assertTrue($validator->fails());
+			$this->assertNotTrue(Phone::validate('0474-12-34-56', 'nl', PhoneType::MOBILE()));
+			$this->assertNotTrue(Phone::validate('0474-12-34-56', 'nl', PhoneType::FIXED()));
+			$this->assertNotTrue(Phone::validate('0474-12-34-56', 'nl', PhoneType::BOTH()));
 		}
 
 		/** @test */
@@ -81,6 +69,31 @@ namespace Codification\Common\Tests
 			]);
 
 			$this->assertTrue($validator->passes());
+		}
+
+		/** @test */
+		public function it_can_fail_validation()
+		{
+			$validator = Validator::make([
+				'phone'         => '0474-12-34-56',
+				'phone_country' => 'nl',
+			], [
+				'phone' => Rule::phone(),
+			]);
+
+			$this->assertTrue($validator->fails());
+		}
+
+		/** @test */
+		public function it_can_fail_country_validation()
+		{
+			$validator = Validator::make([
+				'phone' => '0474-12-34-56',
+			], [
+				'phone' => Rule::phone(),
+			]);
+
+			$this->assertTrue($validator->fails());
 		}
 
 		/** @test */
@@ -113,10 +126,10 @@ namespace Codification\Common\Tests
 		public function it_can_pass_custom_validation()
 		{
 			$validator = Validator::make([
-				'phone' => '0474-12-34-56',
-				'test'  => 'be',
+				'phone'   => '0474-12-34-56',
+				'country' => 'be',
 			], [
-				'phone' => Rule::phone('test'),
+				'phone' => Rule::phone('country'),
 			]);
 
 			$this->assertTrue($validator->passes());

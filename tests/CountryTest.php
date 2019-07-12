@@ -11,7 +11,7 @@ namespace Codification\Common\Tests
 		public function it_can_validate()
 		{
 			$this->assertTrue(Country::isValid('nl'));
-			$this->assertFalse(Country::isValid('abc'));
+			$this->assertNotTrue(Country::isValid('abc'));
 		}
 
 		/** @test */

@@ -18,7 +18,7 @@ namespace Codification\Common\Tests
 		{
 			$object = TestEnum::parse('HELLO');
 			$this->assertTrue($object->eq(TestEnum::HELLO()));
-			$this->assertFalse($object->eq(TestEnum::WORLD()));
+			$this->assertNotTrue($object->eq(TestEnum::WORLD()));
 		}
 
 		/** @test */
@@ -65,8 +65,8 @@ namespace Codification\Common\Tests
 			$this->assertTrue($object->eq(TestEnum::HELLO2()));
 			$this->assertTrue($object->eq(TestEnumFooBar::HELLO(), false));
 
-			$this->assertFalse($object->eq(TestEnum::WORLD()));
-			$this->assertFalse($object->eq(TestEnumFooBar::HELLO()));
+			$this->assertNotTrue($object->eq(TestEnum::WORLD()));
+			$this->assertNotTrue($object->eq(TestEnumFooBar::HELLO()));
 		}
 
 		/** @test */
@@ -80,7 +80,7 @@ namespace Codification\Common\Tests
 		public function it_can_validate()
 		{
 			$this->assertTrue(TestEnum::isValid('hello'));
-			$this->assertFalse(TestEnum::isValid('hello2'));
+			$this->assertNotTrue(TestEnum::isValid('hello2'));
 		}
 
 		/** @test */
@@ -88,7 +88,7 @@ namespace Codification\Common\Tests
 		{
 			$object = TestEnumHasFlags::FIRST();
 			$this->assertTrue($object->eq(TestEnumHasFlags::FIRST()));
-			$this->assertFalse($object->has(TestEnumHasFlags::SECOND()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 		}
 
 		/** @test */
@@ -98,7 +98,7 @@ namespace Codification\Common\Tests
 
 			$object = $object->set(TestEnumHasFlags::FIRST());
 			$this->assertTrue($object->has(TestEnumHasFlags::FIRST()));
-			$this->assertFalse($object->has(TestEnumHasFlags::SECOND()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 
 			$object = $object->set(TestEnumHasFlags::SECOND());
 			$this->assertTrue($object->has(TestEnumHasFlags::FIRST()));
@@ -111,8 +111,8 @@ namespace Codification\Common\Tests
 		{
 			$object = TestEnumHasFlags::BOTH();
 			$object = $object->remove(TestEnumHasFlags::SECOND(), TestEnumHasFlags::FIRST());
-			$this->assertFalse($object->has(TestEnumHasFlags::FIRST()));
-			$this->assertFalse($object->has(TestEnumHasFlags::SECOND()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::FIRST()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 			$this->assertTrue($object->eq(TestEnumHasFlags::NONE()));
 		}
 
@@ -121,7 +121,7 @@ namespace Codification\Common\Tests
 		{
 			$object = TestEnumHasFlags::make('FIRST');
 			$this->assertTrue($object->eq(TestEnumHasFlags::FIRST()));
-			$this->assertFalse($object->has(TestEnumHasFlags::SECOND()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 
 			$object = TestEnumHasFlags::make('FIRST,SECOND');
 			$this->assertTrue($object->has(TestEnumHasFlags::FIRST()));
@@ -142,8 +142,8 @@ namespace Codification\Common\Tests
 		public function it_can_make_flags_from_int()
 		{
 			$object = TestEnumHasFlags::make(0);
-			$this->assertFalse($object->has(TestEnumHasFlags::FIRST()));
-			$this->assertFalse($object->has(TestEnumHasFlags::SECOND()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::FIRST()));
+			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 			$this->assertTrue($object->eq(TestEnumHasFlags::NONE()));
 		}
 
