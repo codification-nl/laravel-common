@@ -79,5 +79,14 @@ namespace Codification\Common\Tests
 			$object = $object->add(Money::make(0.6, 'eur', 'nl'));
 			$this->assertEquals('1.60', $object->format());
 		}
+
+		/** @test */
+		public function it_can_copy()
+		{
+			$object = Money::make(1, 'eur', 'nl');
+			$copy   = $object->copy();
+			$object = $object->add(Money::make(0.6, 'eur', 'nl'));
+			$this->assertNotTrue($object->equals($copy));
+		}
 	}
 }
