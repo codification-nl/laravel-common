@@ -44,28 +44,33 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum|int|string $enum
-		 * @param bool                                         $strict
+		 * @param \Codification\Common\Support\Enum $enum
+		 * @param bool                              $strict
 		 *
 		 * @return bool
 		 */
-		public function equals($enum, bool $strict = true) : bool
+		public function equals(Enum $enum, bool $strict = true) : bool
 		{
 			if (!is_object($enum))
 			{
 				$enum = static::make($enum);
 			}
 
-			return ((!$strict || get_called_class() === get_class($enum)) && $this->value === $enum->value);
+			if ($strict && get_called_class() !== get_class($enum))
+			{
+				return false;
+			}
+
+			return ($this->value === $enum->value);
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum|int|string $enum
-		 * @param bool                                         $strict
+		 * @param \Codification\Common\Support\Enum $enum
+		 * @param bool                              $strict
 		 *
 		 * @return bool
 		 */
-		public function eq($enum, bool $strict = true) : bool
+		public function eq(Enum $enum, bool $strict = true) : bool
 		{
 			return $this->equals($enum, $strict);
 		}
@@ -138,7 +143,7 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param int|string $value
+		 * @param mixed $value
 		 *
 		 * @return $this
 		 */
@@ -191,11 +196,11 @@ namespace Codification\Common\Support
 
 		/**
 		 * @param string $name
-		 * @param array  $arguments
+		 * @param array  $parameters
 		 *
 		 * @return $this
 		 */
-		public static function __callStatic(string $name, array $arguments) : self
+		public static function __callStatic(string $name, array $parameters) : self
 		{
 			return static::parse($name);
 		}

@@ -65,6 +65,7 @@ namespace Codification\Common\Validation\Rules
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{

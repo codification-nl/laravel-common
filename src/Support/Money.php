@@ -5,25 +5,27 @@ namespace Codification\Common\Support
 	use Codification\Common\Money\MoneyUtil;
 
 	/**
-	 * @mixin \Money\Money
+	 * @method bool equals(Money $other)
+	 * @method bool greaterThan(Money $other)
+	 * @method bool greaterThanOrEqual(Money $other)
+	 * @method bool lessThan(Money $other)
+	 * @method bool lessThanOrEqual(Money $other)
+	 * @method Money add(Money $other)
+	 * @method Money subtract(Money $other)
+	 * @method Money multiply(Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
+	 * @method Money divide(Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
 	 */
 	final class Money implements \JsonSerializable
 	{
 		/** @var \Money\Money */
 		private $instance;
 
-		/** @var \Codification\Common\Money\MoneyUtil */
-		private $util;
-
 		/**
-		 * @param string                 $value
-		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param \Money\Money $instance
 		 */
-		private function __construct(string $value, $currency, string $locale = null)
+		private function __construct(\Money\Money $instance)
 		{
-			$this->util     = MoneyUtil::getInstance();
-			$this->instance = $this->util->parse($value, $currency, $locale);
+			$this->instance = $instance;
 		}
 
 		/**
@@ -32,17 +34,19 @@ namespace Codification\Common\Support
 		 * @param string|null            $locale
 		 *
 		 * @return $this|null
+		 * @throws \Codification\Common\Exceptions\LocaleException
+		 * @throws \Codification\Common\Exceptions\CurrencyException
 		 */
 		public static function make($value, $currency, string $locale = null) : ?self
 		{
-			$value = sanitize($value);
+			$instance = MoneyUtil::getInstance()->parse($value, $currency, $locale);
 
-			if ($value === null)
+			if ($instance === null)
 			{
 				return null;
 			}
 
-			return new static($value, $currency, $locale);
+			return new static($instance);
 		}
 
 		/**
@@ -50,7 +54,7 @@ namespace Codification\Common\Support
 		 */
 		public function format() : string
 		{
-			return $this->util->format($this->instance);
+			return MoneyUtil::getInstance()->format($this->instance);
 		}
 
 		/**
@@ -58,18 +62,46 @@ namespace Codification\Common\Support
 		 */
 		public function getCurrencyCode() : int
 		{
-			return $this->util->numericCodeFor($this->instance->getCurrency());
+			return MoneyUtil::getInstance()->getCurrencyCode($this->instance);
 		}
 
 		/**
 		 * @param string $name
-		 * @param array  $arguments
+		 * @param array  $parameters
 		 *
 		 * @return mixed
 		 */
-		public function __call($name, $arguments)
+		public function __call(string $name, array $parameters)
 		{
-			return call_user_func_array([$this->instance, $name], $arguments);
+			if (is_array($parameters))
+			{
+				$parameters = array_map(function ($parameter)
+					{
+						if ($parameter instanceof static)
+						{
+							return $parameter->instance;
+						}
+
+						return $parameter;
+					}, $parameters);
+			}
+
+			$result = $this->instance->{$name}(...$parameters);
+
+			if ($result instanceof \Money\Money)
+			{
+				$result = new static($result);
+			}
+
+			return $result;
+		}
+
+		/**
+		 * @return $this
+		 */
+		public function copy() : self
+		{
+			return new static(clone $this->instance);
 		}
 
 		/**

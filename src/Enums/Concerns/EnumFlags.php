@@ -51,15 +51,12 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum|\Codification\Common\Support\Enum[] $enums
-		 * @param \Codification\Common\Support\Enum[]                                   $_
+		 * @param \Codification\Common\Support\Enum[] ...$enums
 		 *
 		 * @return $this
 		 */
-		public function set($enums, ...$_) : self
+		public function set(...$enums) : self
 		{
-			$enums = array_merge((array)$enums, $_);
-
 			foreach ($enums as $enum)
 			{
 				static::assertType($enum);
@@ -71,15 +68,12 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum|\Codification\Common\Support\Enum[] $enums
-		 * @param \Codification\Common\Support\Enum[]                                   $_
+		 * @param \Codification\Common\Support\Enum[] ...$enums
 		 *
 		 * @return $this
 		 */
-		public function remove($enums, ...$_) : self
+		public function remove(...$enums) : self
 		{
-			$enums = array_merge((array)$enums, $_);
-
 			foreach ($enums as $enum)
 			{
 				static::assertType($enum);

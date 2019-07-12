@@ -2,7 +2,8 @@
 
 namespace Codification\Common\Money
 {
-	use Illuminate\Support\Facades\App;
+	use Codification\Common\Exceptions\CurrencyException;
+	use Codification\Common\Support\Country;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -51,21 +52,13 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param \Money\Currency $currency
+		 * @param \Money\Money $instance
 		 *
 		 * @return int
 		 */
-		public function numericCodeFor(\Money\Currency $currency) : int
+		public function getCurrencyCode(\Money\Money $instance) : int
 		{
-			return $this->isoCurrencies->numericCodeFor($currency);
-		}
-
-		/**
-		 * @return \Money\Parser\DecimalMoneyParser
-		 */
-		public function getDecimalParser() : DecimalMoneyParser
-		{
-			return $this->decimalParser;
+			return $this->isoCurrencies->numericCodeFor($instance->getCurrency());
 		}
 
 		/**
@@ -79,41 +72,46 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param string                 $value
-		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param string $code
 		 *
-		 * @return \Money\Money
+		 * @return \Money\Currency
+		 * @throws \Codification\Common\Exceptions\CurrencyException
 		 */
-		public function parse(string $value, $currency, string $locale = null) : \Money\Money
+		private function getCurrency(string $code) : Currency
 		{
-			if (is_string($currency))
+			$code = sanitize($code);
+
+			if ($code === null)
 			{
-				$currency = sanitize($currency);
-
-				if ($currency === null)
-				{
-					throw new \UnexpectedValueException();
-				}
-
-				$currency = strtoupper($currency);
-
-				if (!array_key_exists($currency, $this->currencies))
-				{
-					$this->currencies[$currency] = new Currency($currency);
-				}
-
-				$currency = $this->currencies[$currency];
+				throw new CurrencyException();
 			}
 
-			$locale = sanitize($locale);
+			$code = strtoupper($code);
 
-			if ($locale === null)
+			if (!array_key_exists($code, $this->currencies))
 			{
-				$locale = App::getLocale();
+				$currency = new Currency($code);
+
+				if (!$this->isoCurrencies->contains($currency))
+				{
+					throw new CurrencyException();
+				}
+
+				$this->currencies[$code] = $currency;
 			}
 
-			$locale = strtolower($locale);
+			return $this->currencies[$code];
+		}
+
+		/**
+		 * @param string|null $locale
+		 *
+		 * @return \Money\Parser\AggregateMoneyParser
+		 * @throws \Codification\Common\Exceptions\LocaleException
+		 */
+		private function getParser(string $locale = null) : AggregateMoneyParser
+		{
+			$locale = strtolower(Country::get($locale));
 
 			if (!array_key_exists($locale, $this->parsers))
 			{
@@ -126,7 +124,33 @@ namespace Codification\Common\Money
 				]);
 			}
 
-			return $this->parsers[$locale]->parse($value, $currency);
+			return $this->parsers[$locale];
+		}
+
+		/**
+		 * @param string|float|int       $value
+		 * @param string|\Money\Currency $currency
+		 * @param string|null            $locale
+		 *
+		 * @return \Money\Money
+		 * @throws \Codification\Common\Exceptions\LocaleException
+		 * @throws \Codification\Common\Exceptions\CurrencyException
+		 */
+		public function parse($value, $currency, string $locale = null) : ?\Money\Money
+		{
+			$value = sanitize($value);
+
+			if ($value === null)
+			{
+				return null;
+			}
+
+			if (is_string($currency))
+			{
+				$currency = $this->getCurrency($currency);
+			}
+
+			return $this->getParser($locale)->parse($value, $currency);
 		}
 	}
 }

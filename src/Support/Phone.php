@@ -3,57 +3,64 @@
 namespace Codification\Common\Support
 {
 	use Codification\Common\Enums\PhoneType;
-	use Illuminate\Support\Facades\App;
+	use Codification\Common\Exceptions\LocaleException;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
 
 	final class Phone implements \JsonSerializable
 	{
-		/** @var \libphonenumber\PhoneNumberUtil */
-		private $util;
-
 		/** @var \libphonenumber\PhoneNumber */
-		private $phoneNumber;
+		private $instance;
 
 		/**
 		 * @param string|null $number
-		 * @param string|null $country
+		 * @param string      $country
 		 *
 		 * @throws \libphonenumber\NumberParseException
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
-		private function __construct(?string $number, string $country = null)
+		private function __construct(?string $number, string $country)
 		{
 			$number  = sanitize($number);
-			$country = sanitize($country);
+			$country = $this->getCountry($country);
 
-			if ($country === null)
-			{
-				$country = App::getLocale();
-			}
-
-			$country = strtoupper($country);
-
-			$this->util        = PhoneNumberUtil::getInstance();
-			$this->phoneNumber = $this->util->parse($number, $country);
+			$this->instance = PhoneNumberUtil::getInstance()->parse($number, $country);
 		}
 
 		/**
-		 * @param string|null $country
+		 * @param string $country
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
-		public function format(string $country = null) : string
+		private function getCountry(string $country) : string
 		{
 			$country = sanitize($country);
 
-			if ($country === null)
+			if ($country === null || !Country::isValid($country))
 			{
-				$country = App::getLocale();
+				throw new LocaleException();
 			}
 
-			$country = strtoupper($country);
+			return strtoupper($country);
+		}
 
-			return $this->util->formatOutOfCountryCallingNumber($this->phoneNumber, $country);
+		/**
+		 * @param string|null $locale
+		 *
+		 * @return string
+		 * @throws \Codification\Common\Exceptions\LocaleException
+		 */
+		public function format(string $locale = null) : string
+		{
+			$util   = PhoneNumberUtil::getInstance();
+			$locale = $this->getCountry($locale);
+
+			/** @var string $result */
+			$result = $util->formatOutOfCountryCallingNumber($this->instance, $locale);
+			$result = str_replace(' ', '', $result);
+
+			return $result;
 		}
 
 		/**
@@ -61,24 +68,16 @@ namespace Codification\Common\Support
 		 * @param \Codification\Common\Enums\PhoneType|null $type
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		public function isValid(string $country = null, PhoneType $type = null) : bool
 		{
-			$country = sanitize($country);
-
-			if ($country === null)
-			{
-				$country = App::getLocale();
-			}
-
-			$country = strtoupper($country);
-
 			if ($type === null)
 			{
 				$type = PhoneType::BOTH();
 			}
 
-			switch ($this->util->getNumberType($this->phoneNumber))
+			switch (PhoneNumberUtil::getInstance()->getNumberType($this->instance))
 			{
 				case PhoneNumberType::FIXED_LINE_OR_MOBILE:
 					break;
@@ -107,7 +106,7 @@ namespace Codification\Common\Support
 					return false;
 			}
 
-			return $this->util->isValidNumberForRegion($this->phoneNumber, $country);
+			return PhoneNumberUtil::getInstance()->isValidNumberForRegion($this->instance, $this->getCountry($country));
 		}
 
 		/**
@@ -116,6 +115,7 @@ namespace Codification\Common\Support
 		 * @param string|null                               $country
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		public static function validate(?string $number, string $country = null, PhoneType $type = null) : bool
 		{
@@ -131,17 +131,18 @@ namespace Codification\Common\Support
 
 		/**
 		 * @param string|null $number
-		 * @param string|null $country
+		 * @param string      $country
 		 *
 		 * @return \Codification\Common\Support\Phone|null
+		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
-		public static function make(?string $number, string $country = null) : ?Phone
+		public static function make(?string $number, string $country) : ?Phone
 		{
 			try
 			{
 				return new static($number, $country);
 			}
-			catch (\Exception $e)
+			catch (\libphonenumber\NumberParseException $e)
 			{
 			}
 

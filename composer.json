@@ -1,7 +1,7 @@
 {
 	"name": "codification/laravel-common",
 	"description": "Common Laravel",
-	"type": "library",
+	"homepage": "https://bitbucket.org/codification-nl/laravel-common",
 	"license": "MIT",
 	"authors": [
 		{
@@ -22,6 +22,10 @@
 		"league/iso3166": "^2.1",
 		"moneyphp/money": "^3.2"
 	},
+	"require-dev": {
+		"orchestra/testbench": "^3.8",
+		"phpunit/phpunit": "^8.0"
+	},
 	"autoload": {
 		"psr-4": {
 			"Codification\\Common\\": "src"
@@ -30,7 +34,22 @@
 			"src/helpers.php"
 		]
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"Codification\\Common\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit"
+	},
 	"config": {
 		"sort-packages": true
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Codification\\Common\\Support\\Providers\\CommonServiceProvider"
+			]
+		}
 	}
 }
