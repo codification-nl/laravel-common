@@ -4,6 +4,7 @@ namespace Codification\Common\Support
 {
 	use Codification\Common\Enums\PhoneType;
 	use Codification\Common\Exceptions\LocaleException;
+	use Illuminate\Support\Facades\App;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
 
@@ -28,14 +29,19 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string $country
+		 * @param string|null $country
 		 *
 		 * @return string
 		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
-		private function getCountry(string $country) : string
+		private function getCountry(?string $country) : string
 		{
 			$country = sanitize($country);
+
+			if ($country === null)
+			{
+				$country = App::getLocale();
+			}
 
 			if ($country === null || !Country::isValid($country))
 			{
@@ -111,13 +117,13 @@ namespace Codification\Common\Support
 
 		/**
 		 * @param null|string                               $number
-		 * @param string|null                               $country
+		 * @param string                                    $country
 		 * @param \Codification\Common\Enums\PhoneType|null $type
 		 *
 		 * @return bool
 		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
-		public static function validate(?string $number, string $country = null, PhoneType $type = null) : bool
+		public static function validate(?string $number, string $country, PhoneType $type = null) : bool
 		{
 			$phone = static::make($number, $country);
 

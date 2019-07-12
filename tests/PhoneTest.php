@@ -39,6 +39,14 @@ namespace Codification\Common\Tests
 		}
 
 		/** @test */
+		public function it_can_format_with_null()
+		{
+			$this->app->setLocale('nl');
+			$object = Phone::make('0474-12-34-56', 'be');
+			$this->assertEquals('0032474123456', $object->format());
+		}
+
+		/** @test */
 		public function it_can_validate()
 		{
 			$this->assertTrue(Phone::validate('0474-12-34-56', 'be', PhoneType::MOBILE()));
