@@ -10,12 +10,12 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="Codification Test Suite">
-            <directory>tests/</directory>
+            <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
 </phpunit>
