@@ -111,8 +111,8 @@ namespace Codification\Common\Support
 
 		/**
 		 * @param null|string                               $number
-		 * @param \Codification\Common\Enums\PhoneType|null $type
 		 * @param string|null                               $country
+		 * @param \Codification\Common\Enums\PhoneType|null $type
 		 *
 		 * @return bool
 		 * @throws \Codification\Common\Exceptions\LocaleException

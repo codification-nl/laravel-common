@@ -2,7 +2,6 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Support\Providers\CommonServiceProvider;
 	use Orchestra\Testbench\TestCase as BaseTestCase;
 
 	class TestCase extends BaseTestCase
@@ -14,7 +13,9 @@ namespace Codification\Common\Tests
 		 */
 		protected function getPackageProviders($app)
 		{
-			return [CommonServiceProvider::class];
+			return [
+				\Codification\Common\Support\Providers\CommonServiceProvider::class,
+			];
 		}
 	}
 }
