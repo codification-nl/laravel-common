@@ -5,6 +5,7 @@ namespace Codification\Common\Validation\Rules
 	use Codification\Common\Enums\PhoneType;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Illuminate\Validation\Validator;
+	use Codification\Common\Support\Country;
 
 	class Phone implements ValidatorRule
 	{
@@ -74,7 +75,7 @@ namespace Codification\Common\Validation\Rules
 
 			$country = data_get($array, $key, null);
 
-			if ($country === null)
+			if ($country === null || !Country::isValid($country))
 			{
 				return false;
 			}
