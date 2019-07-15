@@ -5,6 +5,7 @@ namespace Codification\Common\Support\Providers
 	use Codification\Common\Support\CollectionUtils;
 	use Codification\Common\Support\ContainerUtils;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
+	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Support\Collection;
 	use Illuminate\Support\ServiceProvider;
 
@@ -40,9 +41,16 @@ namespace Codification\Common\Support\Providers
 
 			foreach ($this->validators as $rule => $validator)
 			{
-				if (in_array(ValidatorRule::class, class_implements($validator)))
+				$implements = class_implements($validator);
+
+				if (in_array(ValidatorRule::class, $implements))
 				{
 					$factory->extend($rule, "{$validator}@validate");
+				}
+
+				if (in_array(ValidatorRuleReplacer::class, $implements))
+				{
+					$factory->replacer($rule, "{$validator}@replace");
 				}
 			}
 		}

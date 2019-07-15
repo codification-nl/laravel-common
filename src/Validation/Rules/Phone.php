@@ -4,10 +4,11 @@ namespace Codification\Common\Validation\Rules
 {
 	use Codification\Common\Enums\PhoneType;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
+	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Validation\Validator;
 	use Codification\Common\Support\Country;
 
-	class Phone implements ValidatorRule
+	class Phone implements ValidatorRule, ValidatorRuleReplacer
 	{
 		/** @var string|null */
 		protected $countryField;
@@ -70,10 +71,11 @@ namespace Codification\Common\Validation\Rules
 		{
 			[$country_field, $type] = $parameters;
 
-			$key   = sanitize($country_field) ?: "{$attribute}_country";
-			$array = $validator->getData();
+			$target = $validator->getData();
+			$key    = sanitize($country_field) ?: "{$attribute}_country";
 
-			$country = data_get($array, $key, null);
+			$country = data_get($target, $key, null);
+			$country = sanitize($country);
 
 			if ($country === null || !Country::isValid($country))
 			{
@@ -84,6 +86,28 @@ namespace Codification\Common\Validation\Rules
 			$type = PhoneType::make($type);
 
 			return \Codification\Common\Support\Phone::validate($value, $country, $type);
+		}
+
+		/**
+		 * @param string                           $message
+		 * @param string                           $attribute
+		 * @param string                           $rule
+		 * @param string[]                         $parameters
+		 * @param \Illuminate\Validation\Validator $validator
+		 *
+		 * @return string
+		 */
+		public function replace(string $message, string $attribute, string $rule, array $parameters, Validator $validator) : string
+		{
+			[$country_field] = $parameters;
+
+			$target = $validator->getData();
+			$key    = sanitize($country_field) ?: "{$attribute}_country";
+
+			$country = data_get($target, $key, null);
+			$country = sanitize($country);
+
+			return str_replace(':country', $country, $message);
 		}
 
 		/**

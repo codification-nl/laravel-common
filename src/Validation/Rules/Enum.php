@@ -2,10 +2,11 @@
 
 namespace Codification\Common\Validation\Rules
 {
+	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Illuminate\Validation\Validator;
 
-	class Enum implements ValidatorRule
+	class Enum implements ValidatorRule, ValidatorRuleReplacer
 	{
 		/** @var \Codification\Common\Support\Enum */
 		protected $enum;
@@ -43,6 +44,23 @@ namespace Codification\Common\Validation\Rules
 			[$enum, $strict] = $parameters;
 
 			return $enum::isValid($value, boolval($strict));
+		}
+
+		/**
+		 * @param string                           $message
+		 * @param string                           $attribute
+		 * @param string                           $rule
+		 * @param string[]                         $parameters
+		 * @param \Illuminate\Validation\Validator $validator
+		 *
+		 * @return string
+		 */
+		public function replace(string $message, string $attribute, string $rule, array $parameters, Validator $validator) : string
+		{
+			/** @var \Codification\Common\Support\Enum $enum */
+			[$enum] = $parameters;
+
+			return str_replace(':values', implode(', ', $enum::values()), $message);
 		}
 
 		/**
