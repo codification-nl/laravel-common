@@ -17,6 +17,7 @@
 		"ext-json": "*",
 		"giggsey/libphonenumber-for-php": "^8.10",
 		"illuminate/database": "5.8.*",
+		"illuminate/pagination": "^5.8",
 		"illuminate/support": "5.8.*",
 		"illuminate/validation": "^5.8",
 		"league/iso3166": "^2.1",

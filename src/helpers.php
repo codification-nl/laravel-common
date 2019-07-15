@@ -28,7 +28,6 @@ if (!function_exists('money'))
 	 * @param string|null            $locale
 	 *
 	 * @return \Codification\Common\Support\Money|null
-	 * @throws \Codification\Common\Exceptions\LocaleException
 	 */
 	function money($value, $currency, string $locale = null) : ?Codification\Common\Support\Money
 	{
@@ -43,10 +42,29 @@ if (!function_exists('phone'))
 	 * @param string      $country
 	 *
 	 * @return \Codification\Common\Support\Phone|null
-	 * @throws \Codification\Common\Exceptions\LocaleException
 	 */
 	function phone(?string $number, string $country) : ?Codification\Common\Support\Phone
 	{
 		return Codification\Common\Support\Phone::make($number, $country);
+	}
+}
+
+if (!function_exists('array_value'))
+{
+	/**
+	 * @param array      $array
+	 * @param int|string $key
+	 * @param mixed      $default
+	 *
+	 * @return mixed
+	 */
+	function array_value(array $array, $key, $default = null)
+	{
+		if (!array_key_exists($key, $array))
+		{
+			return $default;
+		}
+
+		return $array[$key];
 	}
 }

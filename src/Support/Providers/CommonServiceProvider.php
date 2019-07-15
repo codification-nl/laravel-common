@@ -2,8 +2,10 @@
 
 namespace Codification\Common\Support\Providers
 {
+	use Codification\Common\Support\CollectionUtils;
+	use Codification\Common\Support\ContainerUtils;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
-	use Illuminate\Container\Container;
+	use Illuminate\Support\Collection;
 	use Illuminate\Support\ServiceProvider;
 
 	class CommonServiceProvider extends ServiceProvider
@@ -19,10 +21,13 @@ namespace Codification\Common\Support\Providers
 
 		/**
 		 * @return void
+		 * @throws \ReflectionException
 		 */
 		public function boot() : void
 		{
 			$this->extendValidator();
+
+			Collection::mixin(new CollectionUtils());
 		}
 
 		/**
@@ -30,21 +35,14 @@ namespace Codification\Common\Support\Providers
 		 */
 		private function extendValidator() : void
 		{
-			try
-			{
-				/** @var \Illuminate\Contracts\Validation\Factory $validation_factory */
-				$validation_factory = Container::getInstance()->make('validator');
-			}
-			catch (\Exception $e)
-			{
-				throw new \RuntimeException('Failed to resolve [Validator] container', 0, $e->getPrevious());
-			}
+			/** @var \Illuminate\Validation\Factory $factory */
+			$factory = ContainerUtils::resolve('validator');
 
 			foreach ($this->validators as $rule => $validator)
 			{
 				if (in_array(ValidatorRule::class, class_implements($validator)))
 				{
-					$validation_factory->extend($rule, "{$validator}@validate");
+					$factory->extend($rule, "{$validator}@validate");
 				}
 			}
 		}

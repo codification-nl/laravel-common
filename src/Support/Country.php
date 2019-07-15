@@ -3,7 +3,6 @@
 namespace Codification\Common\Support
 {
 	use Codification\Common\Exceptions\LocaleException;
-	use Illuminate\Support\Facades\App;
 	use League\ISO3166\ISO3166;
 
 	final class Country
@@ -31,7 +30,6 @@ namespace Codification\Common\Support
 		 * @param string|null $country
 		 *
 		 * @return string
-		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		public static function get(string $country = null) : string
 		{
@@ -39,7 +37,9 @@ namespace Codification\Common\Support
 
 			if ($country === null)
 			{
-				$country = App::getLocale();
+				/** @var \Illuminate\Foundation\Application $app */
+				$app     = ContainerUtils::resolve('app');
+				$country = $app->getLocale();
 			}
 
 			if ($country === null || !static::isValid($country))

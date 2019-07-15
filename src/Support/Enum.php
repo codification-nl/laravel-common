@@ -7,24 +7,16 @@ namespace Codification\Common\Support
 
 	abstract class Enum implements \JsonSerializable
 	{
-		/**
-		 * @var int|string
-		 */
+		/** @var int|string */
 		protected $value;
 
-		/**
-		 * @var array[]
-		 */
+		/** @var array[] */
 		protected static $cache = [];
 
-		/**
-		 * @var string[]
-		 */
+		/** @var string[] */
 		protected static $hidden = [];
 
-		/**
-		 * @return int|string
-		 */
+		/** @return int|string */
 		public function getValue()
 		{
 			return $this->value;
@@ -131,7 +123,7 @@ namespace Codification\Common\Support
 				{
 					$reflection = new \ReflectionClass($type);
 				}
-				catch (\Exception $e)
+				catch (\ReflectionException $e)
 				{
 					throw new \RuntimeException("[$type] does not exist", 0, $e->getPrevious());
 				}
@@ -149,9 +141,7 @@ namespace Codification\Common\Support
 		 */
 		public static function make($value) : self
 		{
-			$value = static::initializeTraits($value);
-
-			return new static($value);
+			return new static(static::initializeTraits($value));
 		}
 
 		/**

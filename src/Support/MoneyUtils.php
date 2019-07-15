@@ -1,9 +1,8 @@
 <?php
 
-namespace Codification\Common\Money
+namespace Codification\Common\Support
 {
 	use Codification\Common\Exceptions\CurrencyException;
-	use Codification\Common\Support\Country;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -11,9 +10,9 @@ namespace Codification\Common\Money
 	use Money\Parser\DecimalMoneyParser;
 	use Money\Parser\IntlLocalizedDecimalParser;
 
-	final class MoneyUtil
+	final class MoneyUtils
 	{
-		/** @var \Codification\Common\Money\MoneyUtil */
+		/** @var \Codification\Common\Support\MoneyUtils */
 		private static $instance = null;
 
 		/** @var \Money\Currencies\ISOCurrencies */
@@ -75,7 +74,6 @@ namespace Codification\Common\Money
 		 * @param string $code
 		 *
 		 * @return \Money\Currency
-		 * @throws \Codification\Common\Exceptions\CurrencyException
 		 */
 		private function getCurrency(string $code) : Currency
 		{
@@ -107,7 +105,6 @@ namespace Codification\Common\Money
 		 * @param string|null $locale
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
-		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
@@ -133,8 +130,6 @@ namespace Codification\Common\Money
 		 * @param string|null            $locale
 		 *
 		 * @return \Money\Money
-		 * @throws \Codification\Common\Exceptions\LocaleException
-		 * @throws \Codification\Common\Exceptions\CurrencyException
 		 */
 		public function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{

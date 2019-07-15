@@ -3,7 +3,6 @@
 namespace Codification\Common\Validation\Rules
 {
 	use Codification\Common\Enums\PhoneType;
-	use Illuminate\Support\Arr;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Illuminate\Validation\Validator;
 
@@ -65,7 +64,6 @@ namespace Codification\Common\Validation\Rules
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool
-		 * @throws \Codification\Common\Exceptions\LocaleException
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{
@@ -74,14 +72,15 @@ namespace Codification\Common\Validation\Rules
 			$key   = sanitize($country_field) ?: "{$attribute}_country";
 			$array = $validator->getData();
 
-			$country = Arr::get($array, $key, null);
+			$country = data_get($array, $key, null);
 
 			if ($country === null)
 			{
 				return false;
 			}
 
-			$type = PhoneType::make(intval($type));
+			$type = intval($type);
+			$type = PhoneType::make($type);
 
 			return \Codification\Common\Support\Phone::validate($value, $country, $type);
 		}

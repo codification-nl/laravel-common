@@ -2,8 +2,6 @@
 
 namespace Codification\Common\Support
 {
-	use Codification\Common\Money\MoneyUtil;
-
 	/**
 	 * @method bool equals(Money $other)
 	 * @method bool greaterThan(Money $other)
@@ -34,12 +32,10 @@ namespace Codification\Common\Support
 		 * @param string|null            $locale
 		 *
 		 * @return $this|null
-		 * @throws \Codification\Common\Exceptions\LocaleException
-		 * @throws \Codification\Common\Exceptions\CurrencyException
 		 */
 		public static function make($value, $currency, string $locale = null) : ?self
 		{
-			$instance = MoneyUtil::getInstance()->parse($value, $currency, $locale);
+			$instance = MoneyUtils::getInstance()->parse($value, $currency, $locale);
 
 			if ($instance === null)
 			{
@@ -54,7 +50,7 @@ namespace Codification\Common\Support
 		 */
 		public function format() : string
 		{
-			return MoneyUtil::getInstance()->format($this->instance);
+			return MoneyUtils::getInstance()->format($this->instance);
 		}
 
 		/**
@@ -62,7 +58,7 @@ namespace Codification\Common\Support
 		 */
 		public function getCurrencyCode() : int
 		{
-			return MoneyUtil::getInstance()->getCurrencyCode($this->instance);
+			return MoneyUtils::getInstance()->getCurrencyCode($this->instance);
 		}
 
 		/**

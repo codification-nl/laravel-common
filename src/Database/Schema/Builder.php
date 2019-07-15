@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Database\Schema
 {
-	use Illuminate\Container\Container;
+	use Codification\Common\Support\ContainerUtils;
 	use Illuminate\Database\Eloquent\Model;
 
 	class Builder extends \Illuminate\Database\Schema\Builder
@@ -23,19 +23,12 @@ namespace Codification\Common\Database\Schema
 		 */
 		public function __construct(string $table, string $model = null, Model $instance = null)
 		{
-			try
-			{
-				/** @var \Illuminate\Database\Connection $database */
-				$database = Container::getInstance()->make('db');
-			}
-			catch (\Exception $e)
-			{
-				throw new \RuntimeException('Failed to resolve [Database] container', 0, $e->getPrevious());
-			}
-
 			$this->table    = $table;
 			$this->model    = $model;
 			$this->instance = $instance;
+
+			/** @var \Illuminate\Database\Connection $database */
+			$database = ContainerUtils::resolve('db');
 
 			parent::__construct($database);
 		}
