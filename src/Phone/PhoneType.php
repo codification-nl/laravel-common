@@ -1,8 +1,8 @@
 <?php
 
-namespace Codification\Common\Enums
+namespace Codification\Common\Phone
 {
-	use Codification\Common\Support\Enum;
+	use Codification\Common\Enums\Enum;
 
 	/**
 	 * @method static PhoneType|int NONE()
@@ -12,7 +12,7 @@ namespace Codification\Common\Enums
 	 */
 	final class PhoneType extends Enum
 	{
-		use Concerns\EnumFlags;
+		use \Codification\Common\Enums\EnumFlags;
 
 		public const NONE   = 0;
 		public const FIXED  = 1 << 0;

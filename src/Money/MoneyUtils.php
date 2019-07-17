@@ -1,8 +1,9 @@
 <?php
 
-namespace Codification\Common\Support
+namespace Codification\Common\Money
 {
-	use Codification\Common\Exceptions\CurrencyException;
+	use Codification\Common\Money\Exceptions\CurrencyException;
+	use Codification\Common\Country\Country;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -12,7 +13,7 @@ namespace Codification\Common\Support
 
 	final class MoneyUtils
 	{
-		/** @var \Codification\Common\Support\MoneyUtils */
+		/** @var \Codification\Common\Money\MoneyUtils */
 		private static $instance = null;
 
 		/** @var \Money\Currencies\ISOCurrencies */

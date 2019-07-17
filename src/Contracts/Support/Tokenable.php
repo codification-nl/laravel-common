@@ -1,6 +1,6 @@
 <?php
 
-namespace Codification\Common\Database\Eloquent\Contracts
+namespace Codification\Common\Contracts\Support
 {
 	/**
 	 * @property string $tokenKey

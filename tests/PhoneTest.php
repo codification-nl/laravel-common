@@ -2,9 +2,9 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Enums\PhoneType;
-	use Codification\Common\Exceptions\LocaleException;
-	use Codification\Common\Support\Phone;
+	use Codification\Common\Phone\PhoneType;
+	use Codification\Common\Country\Exceptions\LocaleException;
+	use Codification\Common\Phone\Phone;
 	use Codification\Common\Validation\Rule;
 	use Illuminate\Support\Facades\Validator;
 
@@ -61,6 +61,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_pass_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone'         => '0474-12-34-56',
 				'phone_country' => 'be',
@@ -74,6 +75,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_fail_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone'         => '0474-12-34-56',
 				'phone_country' => 'nl',
@@ -87,6 +89,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_fail_country_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone' => '0474-12-34-56',
 			], [
@@ -99,6 +102,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_fail_fixed_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone'         => '0474-12-34-56',
 				'phone_country' => 'be',
@@ -112,6 +116,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_pass_mobile_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone'         => '0474-12-34-56',
 				'phone_country' => 'be',
@@ -125,6 +130,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_pass_custom_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'phone'   => '0474-12-34-56',
 				'country' => 'be',

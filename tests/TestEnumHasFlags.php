@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Support\Enum;
+	use Codification\Common\Enums\Enum;
 
 	/**
 	 * @method static TestEnumHasFlags|int NONE()
@@ -12,7 +12,7 @@ namespace Codification\Common\Tests
 	 */
 	class TestEnumHasFlags extends Enum
 	{
-		use \Codification\Common\Enums\Concerns\EnumFlags;
+		use \Codification\Common\Enums\EnumFlags;
 
 		public const NONE   = 0;
 		public const FIRST  = 1 << 0;

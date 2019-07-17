@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Support\Country;
+	use Codification\Common\Country\Country;
 	use Illuminate\Support\Facades\Validator;
 
 	class CountryTest extends TestCase
@@ -17,6 +17,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_pass_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'test' => 'nl',
 			], [
@@ -29,6 +30,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_fail_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'test' => 'abc',
 			], [

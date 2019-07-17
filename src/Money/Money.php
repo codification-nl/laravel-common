@@ -1,6 +1,6 @@
 <?php
 
-namespace Codification\Common\Support
+namespace Codification\Common\Money
 {
 	/**
 	 * @method bool equals(Money $other)

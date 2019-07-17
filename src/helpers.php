@@ -27,11 +27,11 @@ if (!function_exists('money'))
 	 * @param string|\Money\Currency $currency
 	 * @param string|null            $locale
 	 *
-	 * @return \Codification\Common\Support\Money|null
+	 * @return \Codification\Common\Money\Money|null
 	 */
-	function money($value, $currency, string $locale = null) : ?Codification\Common\Support\Money
+	function money($value, $currency, string $locale = null) : ?Codification\Common\Money\Money
 	{
-		return Codification\Common\Support\Money::make($value, $currency, $locale);
+		return Codification\Common\Money\Money::make($value, $currency, $locale);
 	}
 }
 
@@ -41,11 +41,11 @@ if (!function_exists('phone'))
 	 * @param string|null $number
 	 * @param string      $country
 	 *
-	 * @return \Codification\Common\Support\Phone|null
+	 * @return \Codification\Common\Phone\Phone|null
 	 */
-	function phone(?string $number, string $country) : ?Codification\Common\Support\Phone
+	function phone(?string $number, string $country) : ?Codification\Common\Phone\Phone
 	{
-		return Codification\Common\Support\Phone::make($number, $country);
+		return Codification\Common\Phone\Phone::make($number, $country);
 	}
 }
 
@@ -66,5 +66,19 @@ if (!function_exists('array_value'))
 		}
 
 		return $array[$key];
+	}
+}
+
+if (!function_exists('urlsafe_base64'))
+{
+	/**
+	 * @param int  $length  = 16
+	 * @param bool $padding = false
+	 *
+	 * @return string
+	 */
+	function urlsafe_base64(int $length = 16, bool $padding = false) : string
+	{
+		return \Codification\Common\Support\SecureRandom::urlsafe_base64($length, $padding);
 	}
 }

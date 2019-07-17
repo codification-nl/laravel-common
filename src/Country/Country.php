@@ -1,8 +1,9 @@
 <?php
 
-namespace Codification\Common\Support
+namespace Codification\Common\Country
 {
-	use Codification\Common\Exceptions\LocaleException;
+	use Codification\Common\Country\Exceptions\LocaleException;
+	use Codification\Common\Support\ContainerUtils;
 	use League\ISO3166\ISO3166;
 
 	final class Country
@@ -27,7 +28,7 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string|null $country
+		 * @param string|null $country = null
 		 *
 		 * @return string
 		 */

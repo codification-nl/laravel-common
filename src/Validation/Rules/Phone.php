@@ -2,11 +2,11 @@
 
 namespace Codification\Common\Validation\Rules
 {
-	use Codification\Common\Enums\PhoneType;
+	use Codification\Common\Phone\PhoneType;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Validation\Validator;
-	use Codification\Common\Support\Country;
+	use Codification\Common\Country\Country;
 
 	class Phone implements ValidatorRule, ValidatorRuleReplacer
 	{
@@ -48,7 +48,7 @@ namespace Codification\Common\Validation\Rules
 		}
 
 		/**
-		 * @param \Codification\Common\Enums\PhoneType $type
+		 * @param \Codification\Common\Phone\PhoneType $type
 		 *
 		 * @return $this
 		 */
@@ -85,7 +85,7 @@ namespace Codification\Common\Validation\Rules
 			$type = intval($type);
 			$type = PhoneType::make($type);
 
-			return \Codification\Common\Support\Phone::validate($value, $country, $type);
+			return \Codification\Common\Phone\Phone::validate($value, $country, $type);
 		}
 
 		/**
@@ -107,7 +107,10 @@ namespace Codification\Common\Validation\Rules
 			$country = data_get($target, $key, null);
 			$country = sanitize($country);
 
-			return str_replace(':country', $country, $message);
+			/** @var string $string */
+			$string = str_replace(':country', $country, $message);
+
+			return $string;
 		}
 
 		/**

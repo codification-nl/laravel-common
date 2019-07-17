@@ -6,7 +6,7 @@ namespace Codification\Common\Support
 	{
 		/**
 		 * @param string $data
-		 * @param bool   $padding
+		 * @param bool   $padding = false
 		 *
 		 * @return string
 		 */

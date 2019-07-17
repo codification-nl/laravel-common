@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Database\Schema
 {
-	use Codification\Common\Database\Eloquent\Concerns\HasToken;
+	use Codification\Common\Support\HasToken;
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Database\Schema\ColumnDefinition;
 	use Illuminate\Support\Fluent;
@@ -17,10 +17,10 @@ namespace Codification\Common\Database\Schema
 
 		/**
 		 * @param string                                          $table
-		 * @param \Closure|null                                   $callback
-		 * @param string                                          $prefix
-		 * @param \Illuminate\Database\Eloquent\Model|string|null $model
-		 * @param \Illuminate\Database\Eloquent\Model|null        $instance
+		 * @param \Closure|null                                   $callback = null
+		 * @param string                                          $prefix   = ''
+		 * @param \Illuminate\Database\Eloquent\Model|string|null $model    = null
+		 * @param \Illuminate\Database\Eloquent\Model|null        $instance = null
 		 */
 		public function __construct(string $table, \Closure $callback = null, string $prefix = '', string $model = null, Model $instance = null)
 		{
@@ -44,8 +44,8 @@ namespace Codification\Common\Database\Schema
 		}
 
 		/**
-		 * @param string|null $column
-		 * @param int         $length
+		 * @param string|null $column = null
+		 * @param int         $length = 60
 		 *
 		 * @return \Illuminate\Database\Schema\ColumnDefinition
 		 */
@@ -53,7 +53,7 @@ namespace Codification\Common\Database\Schema
 		{
 			if ($column === null)
 			{
-				/** @var \Codification\Common\Database\Eloquent\Contracts\Tokenable $tokenable */
+				/** @var \Codification\Common\Contracts\Support\Tokenable $tokenable */
 				$tokenable = $this->ensureInstance();
 
 				if (!in_array(HasToken::class, class_uses_recursive($tokenable)))
@@ -93,8 +93,8 @@ namespace Codification\Common\Database\Schema
 
 		/**
 		 * @param string|\Illuminate\Database\Eloquent\Model     $relation
-		 * @param string|null                                    $column
-		 * @param string[]|\Illuminate\Database\Eloquent\Model[] $constraints
+		 * @param string|null                                    $column      = null
+		 * @param string[]|\Illuminate\Database\Eloquent\Model[] $constraints = []
 		 *
 		 * @return \Illuminate\Database\Schema\ColumnDefinition
 		 */

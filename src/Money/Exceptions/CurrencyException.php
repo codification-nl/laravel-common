@@ -1,6 +1,6 @@
 <?php
 
-namespace Codification\Common\Exceptions
+namespace Codification\Common\Money\Exceptions
 {
 	class CurrencyException extends \UnexpectedValueException
 	{

@@ -150,6 +150,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_pass_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'enum' => 'hello',
 			], [
@@ -162,6 +163,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_fail_validation()
 		{
+			/** @var \Illuminate\Validation\Validator $validator */
 			$validator = Validator::make([
 				'enum' => 'abc',
 			], [

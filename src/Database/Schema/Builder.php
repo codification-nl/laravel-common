@@ -18,8 +18,8 @@ namespace Codification\Common\Database\Schema
 
 		/**
 		 * @param string                                          $table
-		 * @param \Illuminate\Database\Eloquent\Model|string|null $model
-		 * @param \Illuminate\Database\Eloquent\Model|null        $instance
+		 * @param \Illuminate\Database\Eloquent\Model|string|null $model    = null
+		 * @param \Illuminate\Database\Eloquent\Model|null        $instance = null
 		 */
 		public function __construct(string $table, string $model = null, Model $instance = null)
 		{

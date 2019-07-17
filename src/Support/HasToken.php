@@ -1,11 +1,11 @@
 <?php
 
-namespace Codification\Common\Database\Eloquent\Concerns
+namespace Codification\Common\Support
 {
 	use Illuminate\Support\Str;
 
 	/**
-	 * @mixin \Codification\Common\Database\Eloquent\Contracts\Tokenable
+	 * @mixin \Codification\Common\Contracts\Support\Tokenable
 	 * @mixin \Illuminate\Database\Eloquent\Concerns\HasAttributes
 	 */
 	trait HasToken

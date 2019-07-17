@@ -25,7 +25,7 @@ namespace Codification\Common\Validation\Rules
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{
-			return \Codification\Common\Support\Country::isValid($value);
+			return \Codification\Common\Country\Country::isValid($value);
 		}
 
 		/**

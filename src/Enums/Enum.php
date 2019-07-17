@@ -1,6 +1,6 @@
 <?php
 
-namespace Codification\Common\Support
+namespace Codification\Common\Enums
 {
 	use Codification\Common\Validation\Rules;
 	use Illuminate\Database\Eloquent\Builder;
@@ -36,8 +36,8 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum $enum
-		 * @param bool                              $strict
+		 * @param \Codification\Common\Enums\Enum $enum
+		 * @param bool                            $strict
 		 *
 		 * @return bool
 		 */
@@ -57,8 +57,8 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum $enum
-		 * @param bool                              $strict
+		 * @param \Codification\Common\Enums\Enum $enum
+		 * @param bool                            $strict
 		 *
 		 * @return bool
 		 */
@@ -95,7 +95,7 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum $enum
+		 * @param \Codification\Common\Enums\Enum $enum
 		 *
 		 * @return void
 		 */
@@ -243,10 +243,10 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param \Illuminate\Database\Eloquent\Builder        $builder
-		 * @param string                                       $column
-		 * @param \Codification\Common\Support\Enum|int|string $value
-		 * @param string                                       $boolean
+		 * @param \Illuminate\Database\Eloquent\Builder      $builder
+		 * @param string                                     $column
+		 * @param \Codification\Common\Enums\Enum|int|string $value
+		 * @param string                                     $boolean
 		 *
 		 * @return \Illuminate\Database\Eloquent\Builder
 		 */

@@ -1,12 +1,9 @@
 <?php
 
-namespace Codification\Common\Database\Eloquent\Concerns
+namespace Codification\Common\Enums
 {
-	use Codification\Common\Database\Eloquent\Scopes\EnumScope;
-	use Codification\Common\Support\Enum;
-
 	/**
-	 * @mixin \Codification\Common\Database\Eloquent\Contracts\HasEnums
+	 * @mixin \Codification\Common\Contracts\Enums\HasEnums
 	 * @mixin \Illuminate\Database\Eloquent\Concerns\HasAttributes
 	 * @mixin \Illuminate\Database\Eloquent\Concerns\HasGlobalScopes
 	 */
@@ -23,7 +20,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		/**
 		 * @param string $key
 		 *
-		 * @return mixed|\Codification\Common\Support\Enum
+		 * @return mixed|\Codification\Common\Enums\Enum
 		 */
 		public function getAttributeValue($key)
 		{
@@ -39,8 +36,8 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param string                                  $key
-		 * @param mixed|\Codification\Common\Support\Enum $value
+		 * @param string                                $key
+		 * @param mixed|\Codification\Common\Enums\Enum $value
 		 *
 		 * @return mixed
 		 */
@@ -58,7 +55,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @return string[]|\Codification\Common\Support\Enum[]
+		 * @return string[]|\Codification\Common\Enums\Enum[]
 		 */
 		public function getEnums() : array
 		{
@@ -66,10 +63,10 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param int|string                               $value
-		 * @param string|\Codification\Common\Support\Enum $enum
+		 * @param int|string                             $value
+		 * @param string|\Codification\Common\Enums\Enum $enum
 		 *
-		 * @return \Codification\Common\Support\Enum
+		 * @return \Codification\Common\Enums\Enum
 		 */
 		public function asEnum($value, string $enum) : Enum
 		{
@@ -77,7 +74,7 @@ namespace Codification\Common\Database\Eloquent\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum $enum
+		 * @param \Codification\Common\Enums\Enum $enum
 		 *
 		 * @return int|string
 		 */

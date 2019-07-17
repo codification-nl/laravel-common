@@ -1,9 +1,7 @@
 <?php
 
-namespace Codification\Common\Database\Eloquent\Scopes
+namespace Codification\Common\Enums
 {
-	use Codification\Common\Enums\Concerns\EnumFlags;
-	use Codification\Common\Support\Enum;
 	use Illuminate\Database\Eloquent\Scope;
 	use Illuminate\Database\Eloquent\Builder;
 	use Illuminate\Database\Eloquent\Model;
@@ -12,8 +10,8 @@ namespace Codification\Common\Database\Eloquent\Scopes
 	class EnumScope implements Scope
 	{
 		/**
-		 * @param \Illuminate\Database\Eloquent\Builder                                                         $builder
-		 * @param \Illuminate\Database\Eloquent\Model|\Codification\Common\Database\Eloquent\Contracts\HasEnums $model
+		 * @param \Illuminate\Database\Eloquent\Builder                                             $builder
+		 * @param \Illuminate\Database\Eloquent\Model|\Codification\Common\Contracts\Enums\HasEnums $model
 		 *
 		 * @return void
 		 */
@@ -37,7 +35,7 @@ namespace Codification\Common\Database\Eloquent\Scopes
 		 */
 		public function extend(Builder $builder) : void
 		{
-			/** @var \Codification\Common\Database\Eloquent\Contracts\HasEnums $model */
+			/** @var \Codification\Common\Contracts\Enums\HasEnums $model */
 			$model = $builder->getModel();
 
 			foreach ($model->getEnums() as $column => $type)

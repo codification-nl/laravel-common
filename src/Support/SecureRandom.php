@@ -5,8 +5,8 @@ namespace Codification\Common\Support
 	final class SecureRandom
 	{
 		/**
-		 * @param int  $length
-		 * @param bool $padding
+		 * @param int  $length  = 16
+		 * @param bool $padding = false
 		 *
 		 * @return string
 		 */

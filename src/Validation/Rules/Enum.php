@@ -8,15 +8,15 @@ namespace Codification\Common\Validation\Rules
 
 	class Enum implements ValidatorRule, ValidatorRuleReplacer
 	{
-		/** @var \Codification\Common\Support\Enum */
+		/** @var \Codification\Common\Enums\Enum */
 		protected $enum;
 
 		/** @var bool */
 		protected $strict;
 
 		/**
-		 * @param string|\Codification\Common\Support\Enum $enum
-		 * @param bool                                     $strict
+		 * @param string|\Codification\Common\Enums\Enum $enum
+		 * @param bool                                   $strict
 		 *
 		 * @return $this
 		 */
@@ -40,7 +40,7 @@ namespace Codification\Common\Validation\Rules
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{
-			/** @var \Codification\Common\Support\Enum $enum */
+			/** @var \Codification\Common\Enums\Enum $enum */
 			[$enum, $strict] = $parameters;
 
 			return $enum::isValid($value, boolval($strict));
@@ -57,10 +57,13 @@ namespace Codification\Common\Validation\Rules
 		 */
 		public function replace(string $message, string $attribute, string $rule, array $parameters, Validator $validator) : string
 		{
-			/** @var \Codification\Common\Support\Enum $enum */
+			/** @var \Codification\Common\Enums\Enum $enum */
 			[$enum] = $parameters;
 
-			return str_replace(':values', implode(', ', $enum::values()), $message);
+			/** @var string $string */
+			$string = str_replace(':values', implode(', ', $enum::values()), $message);
+
+			return $string;
 		}
 
 		/**

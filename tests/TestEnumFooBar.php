@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Support\Enum;
+	use Codification\Common\Enums\Enum;
 
 	/**
 	 * @method static TestEnumFooBar|string HELLO()

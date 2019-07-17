@@ -1,9 +1,9 @@
 <?php
 
-namespace Codification\Common\Enums\Concerns
+namespace Codification\Common\Enums
 {
 	/**
-	 * @mixin \Codification\Common\Support\Enum
+	 * @mixin \Codification\Common\Enums\Enum
 	 */
 	trait EnumFlags
 	{
@@ -39,7 +39,7 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum $enum
+		 * @param \Codification\Common\Enums\Enum $enum
 		 *
 		 * @return bool
 		 */
@@ -51,7 +51,7 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum[] ...$enums
+		 * @param \Codification\Common\Enums\Enum[] ...$enums
 		 *
 		 * @return $this
 		 */
@@ -68,7 +68,7 @@ namespace Codification\Common\Enums\Concerns
 		}
 
 		/**
-		 * @param \Codification\Common\Support\Enum[] ...$enums
+		 * @param \Codification\Common\Enums\Enum[] ...$enums
 		 *
 		 * @return $this
 		 */

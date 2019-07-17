@@ -1,8 +1,8 @@
 <?php
 
-namespace Codification\Common\Support
+namespace Codification\Common\Phone
 {
-	use Codification\Common\Enums\PhoneType;
+	use Codification\Common\Country\Country;
 	use libphonenumber\NumberParseException;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
@@ -54,8 +54,8 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string|null                               $country
-		 * @param \Codification\Common\Enums\PhoneType|null $type
+		 * @param string|null                               $country = null
+		 * @param \Codification\Common\Phone\PhoneType|null $type    = null
 		 *
 		 * @return bool
 		 */
@@ -101,7 +101,7 @@ namespace Codification\Common\Support
 		/**
 		 * @param null|string                               $number
 		 * @param string                                    $country
-		 * @param \Codification\Common\Enums\PhoneType|null $type
+		 * @param \Codification\Common\Phone\PhoneType|null $type = null
 		 *
 		 * @return bool
 		 */
@@ -118,12 +118,13 @@ namespace Codification\Common\Support
 		}
 
 		/**
-		 * @param string|null $number
-		 * @param string      $country
+		 * @param string|null                                     $number
+		 * @param string                                          $country
+		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error_type = null
 		 *
-		 * @return \Codification\Common\Support\Phone|null
+		 * @return \Codification\Common\Phone\Phone|null
 		 */
-		public static function make(?string $number, string $country) : ?Phone
+		public static function make(?string $number, string $country, ParseErrorType &$parse_error_type = null) : ?Phone
 		{
 			try
 			{
@@ -131,6 +132,10 @@ namespace Codification\Common\Support
 			}
 			catch (NumberParseException $e)
 			{
+				if ($parse_error_type !== null)
+				{
+					$parse_error_type = ParseErrorType::make($e->getErrorType());
+				}
 			}
 
 			return null;

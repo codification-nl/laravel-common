@@ -50,7 +50,12 @@
 		"laravel": {
 			"providers": [
 				"Codification\\Common\\Support\\Providers\\CommonServiceProvider"
-			]
+			],
+			"aliases": {
+				"Country": "Codification\\Common\\Support\\Facades\\Country",
+				"Money": "Codification\\Common\\Support\\Facades\\Money",
+				"Phone": "Codification\\Common\\Support\\Facades\\Phone"
+			}
 		}
 	}
 }

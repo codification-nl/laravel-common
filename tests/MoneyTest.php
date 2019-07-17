@@ -2,9 +2,9 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Exceptions\CurrencyException;
-	use Codification\Common\Exceptions\LocaleException;
-	use Codification\Common\Support\Money;
+	use Codification\Common\Money\Exceptions\CurrencyException;
+	use Codification\Common\Country\Exceptions\LocaleException;
+	use Codification\Common\Money\Money;
 
 	class MoneyTest extends TestCase
 	{

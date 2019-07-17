@@ -13,8 +13,8 @@ namespace Codification\Common\Validation
 		}
 
 		/**
-		 * @param string|\Codification\Common\Support\Enum $enum
-		 * @param bool                                     $strict
+		 * @param string|\Codification\Common\Enums\Enum $enum
+		 * @param bool                                   $strict = true
 		 *
 		 * @return \Codification\Common\Validation\Rules\Enum
 		 */
@@ -24,7 +24,7 @@ namespace Codification\Common\Validation
 		}
 
 		/**
-		 * @param bool $allow_empty
+		 * @param bool $allow_empty = false
 		 *
 		 * @return \Codification\Common\Validation\Rules\Interval
 		 */
@@ -42,7 +42,7 @@ namespace Codification\Common\Validation
 		}
 
 		/**
-		 * @param string|null $country_field
+		 * @param string|null $country_field = null
 		 *
 		 * @return \Codification\Common\Validation\Rules\Phone
 		 */
