@@ -40,6 +40,7 @@ namespace Codification\Common\Tests
 		public function it_can_handle_empty_locale()
 		{
 			$this->app->setLocale('nl');
+
 			$object = Money::make(1, 'eur');
 			$this->assertNotNull($object);
 		}

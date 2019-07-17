@@ -2,8 +2,8 @@
 
 namespace Codification\Common\Tests
 {
+	use Codification\Common\Phone\ParseErrorType;
 	use Codification\Common\Phone\PhoneType;
-	use Codification\Common\Country\Exceptions\InvalidCountryCodeException;
 	use Codification\Common\Phone\Phone;
 	use Codification\Common\Validation\Rule;
 	use Illuminate\Support\Facades\Validator;
@@ -20,30 +20,42 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_handle_null()
 		{
-			$object = Phone::make(null, 'nl');
+			$parse_error = ParseErrorType::NONE();
+
+			$object = Phone::make(null, 'nl', $parse_error);
 			$this->assertNull($object);
+			$this->assertTrue($parse_error->eq(ParseErrorType::NOT_A_NUMBER()));
 		}
 
 		/** @test */
 		public function it_throws_on_invalid_country()
 		{
-			$this->expectException(InvalidCountryCodeException::class);
-			Phone::make('0474-12-34-56', 'abc');
+			$parse_error = ParseErrorType::NONE();
+
+			Phone::make('0474-12-34-56', 'abc', $parse_error);
+			$this->assertTrue($parse_error->eq(ParseErrorType::INVALID_COUNTRY_CODE()));
 		}
 
 		/** @test */
 		public function it_can_format()
 		{
-			$object = Phone::make('0474-12-34-56', 'be');
+			$parse_error = ParseErrorType::NONE();
+
+			$object = Phone::make('0474-12-34-56', 'be', $parse_error);
 			$this->assertEquals('0032474123456', $object->format('nl'));
+			$this->assertTrue($parse_error->eq(ParseErrorType::NONE()));
 		}
 
 		/** @test */
 		public function it_can_format_with_null()
 		{
 			$this->app->setLocale('nl');
-			$object = Phone::make('0474-12-34-56', 'be');
+
+			$parse_error = ParseErrorType::NONE();
+
+			$object = Phone::make('0474-12-34-56', 'be', $parse_error);
 			$this->assertEquals('0032474123456', $object->format());
+			$this->assertTrue($parse_error->eq(ParseErrorType::NONE()));
 		}
 
 		/** @test */
