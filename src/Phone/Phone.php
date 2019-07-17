@@ -13,38 +13,14 @@ namespace Codification\Common\Phone
 		private $instance;
 
 		/**
-		 * @param string|null $number
-		 * @param string      $country
-		 *
-		 * @throws \libphonenumber\NumberParseException
-		 */
-		private function __construct(?string $number, string $country)
-		{
-			$number  = sanitize($number);
-			$country = $this->getCountry($country);
-
-			$this->instance = PhoneNumberUtil::getInstance()->parse($number, $country);
-		}
-
-		/**
-		 * @param string|null $country
-		 *
-		 * @return string
-		 */
-		private function getCountry(?string $country) : string
-		{
-			return strtoupper(Country::get($country));
-		}
-
-		/**
-		 * @param string|null $locale
+		 * @param string|null $locale = null
 		 *
 		 * @return string
 		 */
 		public function format(string $locale = null) : string
 		{
 			$util   = PhoneNumberUtil::getInstance();
-			$locale = $this->getCountry($locale);
+			$locale = strtoupper(Country::get($locale));
 
 			/** @var string $result */
 			$result = $util->formatOutOfCountryCallingNumber($this->instance, $locale);
@@ -95,7 +71,9 @@ namespace Codification\Common\Phone
 					return false;
 			}
 
-			return PhoneNumberUtil::getInstance()->isValidNumberForRegion($this->instance, $this->getCountry($country));
+			$country = strtoupper(Country::get($country));
+
+			return PhoneNumberUtil::getInstance()->isValidNumberForRegion($this->instance, $country);
 		}
 
 		/**
@@ -126,9 +104,16 @@ namespace Codification\Common\Phone
 		 */
 		public static function make(?string $number, string $country, ParseErrorType &$parse_error_type = null) : ?Phone
 		{
+			$number  = sanitize($number);
+			$country = strtoupper(Country::get($country));
+
 			try
 			{
-				return new static($number, $country);
+				$phone = new static();
+
+				$phone->instance = PhoneNumberUtil::getInstance()->parse($number, $country);
+
+				return $phone;
 			}
 			catch (NumberParseException $e)
 			{

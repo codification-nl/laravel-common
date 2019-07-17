@@ -19,14 +19,6 @@ namespace Codification\Common\Money
 		private $instance;
 
 		/**
-		 * @param \Money\Money $instance
-		 */
-		private function __construct(\Money\Money $instance)
-		{
-			$this->instance = $instance;
-		}
-
-		/**
 		 * @param string|float|int|null  $value
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale
@@ -42,7 +34,11 @@ namespace Codification\Common\Money
 				return null;
 			}
 
-			return new static($instance);
+			$money = new static();
+
+			$money->instance = $instance;
+
+			return $money;
 		}
 
 		/**
@@ -86,7 +82,9 @@ namespace Codification\Common\Money
 
 			if ($result instanceof \Money\Money)
 			{
-				$result = new static($result);
+				$money = new static();
+
+				$money->instance = $result;
 			}
 
 			return $result;
@@ -97,7 +95,11 @@ namespace Codification\Common\Money
 		 */
 		public function copy() : self
 		{
-			return new static(clone $this->instance);
+			$money = new static();
+
+			$money->instance = clone $this->instance;
+
+			return $money;
 		}
 
 		/**
