@@ -20,6 +20,27 @@ namespace Codification\Common\Support\Providers
 			'phone'    => \Codification\Common\Validation\Rules\Phone::class,
 		];
 
+		/** @var string[] */
+		private $facades = [
+			'country' => \Codification\Common\Country\Country::class,
+			'money'   => \Codification\Common\Money\Money::class,
+			'phone'   => \Codification\Common\Phone\Phone::class,
+		];
+
+		/**
+		 * @return void
+		 */
+		public function register()
+		{
+			foreach ($this->facades as $abstract => $class)
+			{
+				$this->app->bind($abstract, function () use ($class)
+					{
+						return new $class();
+					});
+			}
+		}
+
 		/**
 		 * @return void
 		 * @throws \ReflectionException
