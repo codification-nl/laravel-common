@@ -82,9 +82,11 @@ namespace Codification\Common\Money
 
 			if ($result instanceof \Money\Money)
 			{
-				$money = new static();
+				$instance = $result;
 
-				$money->instance = $result;
+				$result = new static();
+
+				$result->instance = $instance;
 			}
 
 			return $result;
