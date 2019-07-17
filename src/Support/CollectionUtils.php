@@ -2,7 +2,7 @@
 
 namespace Codification\Common\Support
 {
-	use Illuminate\Pagination\LengthAwarePaginator;
+	use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 	use Illuminate\Pagination\Paginator;
 
 	/**
@@ -12,7 +12,7 @@ namespace Codification\Common\Support
 	{
 		public function paginate()
 		{
-			return function (int $per_page = null, array $columns = ['*'], string $page_name = 'page', int $page = null) : \Illuminate\Contracts\Pagination\LengthAwarePaginator
+			return function (int $per_page = null, array $columns = ['*'], string $page_name = 'page', int $page = null) : LengthAwarePaginator
 				{
 					$first = $this->first();
 
@@ -34,7 +34,7 @@ namespace Codification\Common\Support
 						$results = $results->only($columns);
 					}
 
-					return new LengthAwarePaginator($results, $total, $per_page, $page, [
+					return new \Illuminate\Pagination\LengthAwarePaginator($results, $total, $per_page, $page, [
 						'path'     => Paginator::resolveCurrentPath(),
 						'pageName' => $page_name,
 					]);

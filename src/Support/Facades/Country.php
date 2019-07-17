@@ -5,8 +5,8 @@ namespace Codification\Common\Support\Facades
 	use Illuminate\Support\Facades\Facade;
 
 	/**
-	 * @method static string get(string|null $country)
-	 * @method static bool isValid(string|null $country)
+	 * @method static bool isValid(string $country)
+	 * @method static void ensureValid(string $country)
 	 */
 	class Country extends Facade
 	{

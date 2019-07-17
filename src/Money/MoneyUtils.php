@@ -2,8 +2,8 @@
 
 namespace Codification\Common\Money
 {
-	use Codification\Common\Money\Exceptions\CurrencyException;
 	use Codification\Common\Country\Country;
+	use Codification\Common\Support\ContainerUtils;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -75,6 +75,7 @@ namespace Codification\Common\Money
 		 * @param string $code
 		 *
 		 * @return \Money\Currency
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyException
 		 */
 		private function getCurrency(string $code) : Currency
 		{
@@ -82,7 +83,7 @@ namespace Codification\Common\Money
 
 			if ($code === null)
 			{
-				throw new CurrencyException();
+				throw new Exceptions\CurrencyException();
 			}
 
 			$code = strtoupper($code);
@@ -93,7 +94,7 @@ namespace Codification\Common\Money
 
 				if (!$this->isoCurrencies->contains($currency))
 				{
-					throw new CurrencyException();
+					throw new Exceptions\CurrencyException();
 				}
 
 				$this->currencies[$code] = $currency;
@@ -103,13 +104,25 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param string|null $locale
+		 * @param string|null $locale = null
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
 		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
-			$locale = strtolower(Country::get($locale));
+			$locale = sanitize($locale);
+
+			if ($locale === null)
+			{
+				/** @var \Illuminate\Foundation\Application $app */
+				$app    = ContainerUtils::resolve('app');
+				$locale = $app->getLocale();
+			}
+
+			Country::ensureValid($locale);
+
+			$locale = strtolower($locale);
 
 			if (!array_key_exists($locale, $this->parsers))
 			{
@@ -128,9 +141,11 @@ namespace Codification\Common\Money
 		/**
 		 * @param string|float|int       $value
 		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param string|null            $locale = null
 		 *
 		 * @return \Money\Money
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyException
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
 		public function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{

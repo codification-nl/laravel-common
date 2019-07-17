@@ -3,7 +3,7 @@
 namespace Codification\Common\Tests
 {
 	use Codification\Common\Money\Exceptions\CurrencyException;
-	use Codification\Common\Country\Exceptions\LocaleException;
+	use Codification\Common\Country\Exceptions\InvalidCountryCodeException;
 	use Codification\Common\Money\Money;
 
 	class MoneyTest extends TestCase
@@ -32,7 +32,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_throws_on_invalid_locale()
 		{
-			$this->expectException(LocaleException::class);
+			$this->expectException(InvalidCountryCodeException::class);
 			Money::make(1, 'eur', 'abc');
 		}
 

@@ -6,7 +6,6 @@ namespace Codification\Common\Validation\Rules
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Validation\Validator;
-	use Codification\Common\Country\Country;
 
 	class Phone implements ValidatorRule, ValidatorRuleReplacer
 	{
@@ -17,7 +16,7 @@ namespace Codification\Common\Validation\Rules
 		protected $type;
 
 		/**
-		 * @param string|null $country_field
+		 * @param string|null $country_field = null
 		 *
 		 * @return $this
 		 */
@@ -77,7 +76,7 @@ namespace Codification\Common\Validation\Rules
 			$country = data_get($target, $key, null);
 			$country = sanitize($country);
 
-			if ($country === null || !Country::isValid($country))
+			if ($country === null)
 			{
 				return false;
 			}

@@ -24,12 +24,14 @@ namespace Codification\Common\Enums
 
 		/**
 		 * @param int|string $value
+		 *
+		 * @throws \Codification\Common\Enums\Exceptions\EnumException
 		 */
 		protected function __construct($value)
 		{
 			if (!static::isValid($value))
 			{
-				throw new \UnexpectedValueException(sprintf('Unexpected value \'%s\' for [%s]', $value, get_called_class()));
+				throw new Exceptions\EnumException(sprintf('Unexpected value \'%s\' for [%s]', $value, get_called_class()));
 			}
 
 			$this->value = $value;
@@ -37,7 +39,7 @@ namespace Codification\Common\Enums
 
 		/**
 		 * @param \Codification\Common\Enums\Enum $enum
-		 * @param bool                            $strict
+		 * @param bool                            $strict = true
 		 *
 		 * @return bool
 		 */
@@ -58,7 +60,7 @@ namespace Codification\Common\Enums
 
 		/**
 		 * @param \Codification\Common\Enums\Enum $enum
-		 * @param bool                            $strict
+		 * @param bool                            $strict = true
 		 *
 		 * @return bool
 		 */
@@ -69,7 +71,7 @@ namespace Codification\Common\Enums
 
 		/**
 		 * @param int|string $value
-		 * @param bool       $strict
+		 * @param bool       $strict = true
 		 *
 		 * @return bool
 		 */
@@ -98,6 +100,7 @@ namespace Codification\Common\Enums
 		 * @param \Codification\Common\Enums\Enum $enum
 		 *
 		 * @return void
+		 * @throws \Codification\Common\Enums\Exceptions\EnumException
 		 */
 		public static function assertType(Enum $enum) : void
 		{
@@ -106,7 +109,7 @@ namespace Codification\Common\Enums
 
 			if ($other !== $type)
 			{
-				throw new \UnexpectedValueException("[$other] !== [$type]");
+				throw new Exceptions\EnumException("[$other] !== [$type]");
 			}
 		}
 
@@ -171,6 +174,7 @@ namespace Codification\Common\Enums
 		 * @param string $name
 		 *
 		 * @return $this
+		 * @throws \Codification\Common\Enums\Exceptions\EnumException
 		 */
 		public static function parse(string $name) : self
 		{
@@ -178,7 +182,7 @@ namespace Codification\Common\Enums
 
 			if (!array_key_exists($name, $values))
 			{
-				throw new \UnexpectedValueException(sprintf("'%s' does not exist in [%s]", $name, get_called_class()));
+				throw new Exceptions\EnumException(sprintf("'%s' does not exist in [%s]", $name, get_called_class()));
 			}
 
 			return new static($values[$name]);
@@ -212,7 +216,7 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param bool $strict
+		 * @param bool $strict = true
 		 *
 		 * @return \Codification\Common\Validation\Rules\Enum
 		 */
@@ -246,7 +250,7 @@ namespace Codification\Common\Enums
 		 * @param \Illuminate\Database\Eloquent\Builder      $builder
 		 * @param string                                     $column
 		 * @param \Codification\Common\Enums\Enum|int|string $value
-		 * @param string                                     $boolean
+		 * @param string                                     $boolean = 'and'
 		 *
 		 * @return \Illuminate\Database\Eloquent\Builder
 		 */

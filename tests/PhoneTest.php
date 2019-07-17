@@ -3,7 +3,7 @@
 namespace Codification\Common\Tests
 {
 	use Codification\Common\Phone\PhoneType;
-	use Codification\Common\Country\Exceptions\LocaleException;
+	use Codification\Common\Country\Exceptions\InvalidCountryCodeException;
 	use Codification\Common\Phone\Phone;
 	use Codification\Common\Validation\Rule;
 	use Illuminate\Support\Facades\Validator;
@@ -27,7 +27,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_throws_on_invalid_country()
 		{
-			$this->expectException(LocaleException::class);
+			$this->expectException(InvalidCountryCodeException::class);
 			Phone::make('0474-12-34-56', 'abc');
 		}
 

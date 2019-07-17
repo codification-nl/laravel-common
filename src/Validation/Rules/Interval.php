@@ -12,7 +12,7 @@ namespace Codification\Common\Validation\Rules
 		protected $allowEmpty;
 
 		/**
-		 * @param bool $allow_empty
+		 * @param bool $allow_empty = false
 		 *
 		 * @return $this
 		 */

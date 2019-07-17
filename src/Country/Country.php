@@ -2,8 +2,6 @@
 
 namespace Codification\Common\Country
 {
-	use Codification\Common\Country\Exceptions\LocaleException;
-	use Codification\Common\Support\ContainerUtils;
 	use League\ISO3166\ISO3166;
 
 	final class Country
@@ -28,27 +26,19 @@ namespace Codification\Common\Country
 		}
 
 		/**
-		 * @param string|null $country = null
+		 * @param string|null $country
 		 *
-		 * @return string
+		 * @return void
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		public static function get(string $country = null) : string
+		public static function ensureValid(?string $country) : void
 		{
-			$country = sanitize($country);
-
-			if ($country === null)
+			if (static::isValid($country))
 			{
-				/** @var \Illuminate\Foundation\Application $app */
-				$app     = ContainerUtils::resolve('app');
-				$country = $app->getLocale();
+				return;
 			}
 
-			if ($country === null || !static::isValid($country))
-			{
-				throw new LocaleException();
-			}
-
-			return $country;
+			throw new Exceptions\InvalidCountryCodeException();
 		}
 	}
 }

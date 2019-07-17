@@ -16,7 +16,7 @@ namespace Codification\Common\Validation\Rules
 
 		/**
 		 * @param string|\Codification\Common\Enums\Enum $enum
-		 * @param bool                                   $strict
+		 * @param bool                                   $strict = true
 		 *
 		 * @return $this
 		 */

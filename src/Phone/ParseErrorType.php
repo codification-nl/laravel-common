@@ -6,6 +6,7 @@ namespace Codification\Common\Phone
 	use libphonenumber\NumberParseException;
 
 	/**
+	 * @method static ParseErrorType|int NONE()
 	 * @method static ParseErrorType|int INVALID_COUNTRY_CODE()
 	 * @method static ParseErrorType|int NOT_A_NUMBER()
 	 * @method static ParseErrorType|int TOO_SHORT_AFTER_IDD()
@@ -14,6 +15,7 @@ namespace Codification\Common\Phone
 	 */
 	final class ParseErrorType extends Enum
 	{
+		public const NONE                 = -1;
 		public const INVALID_COUNTRY_CODE = NumberParseException::INVALID_COUNTRY_CODE;
 		public const NOT_A_NUMBER         = NumberParseException::NOT_A_NUMBER;
 		public const TOO_SHORT_AFTER_IDD  = NumberParseException::TOO_SHORT_AFTER_IDD;

@@ -3,15 +3,15 @@
 namespace Codification\Common\Money
 {
 	/**
-	 * @method bool equals(Money $other)
-	 * @method bool greaterThan(Money $other)
-	 * @method bool greaterThanOrEqual(Money $other)
-	 * @method bool lessThan(Money $other)
-	 * @method bool lessThanOrEqual(Money $other)
-	 * @method Money add(Money $other)
-	 * @method Money subtract(Money $other)
-	 * @method Money multiply(Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
-	 * @method Money divide(Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
+	 * @method bool equals(\Codification\Common\Money\Money $other)
+	 * @method bool greaterThan(\Codification\Common\Money\Money $other)
+	 * @method bool greaterThanOrEqual(\Codification\Common\Money\Money $other)
+	 * @method bool lessThan(\Codification\Common\Money\Money $other)
+	 * @method bool lessThanOrEqual(\Codification\Common\Money\Money $other)
+	 * @method \Codification\Common\Money\Money add(\Codification\Common\Money\Money $other)
+	 * @method \Codification\Common\Money\Money subtract(\Codification\Common\Money\Money $other)
+	 * @method \Codification\Common\Money\Money multiply(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
+	 * @method \Codification\Common\Money\Money divide(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
 	 */
 	final class Money implements \JsonSerializable
 	{

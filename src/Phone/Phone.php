@@ -3,6 +3,7 @@
 namespace Codification\Common\Phone
 {
 	use Codification\Common\Country\Country;
+	use Codification\Common\Support\ContainerUtils;
 	use libphonenumber\NumberParseException;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
@@ -16,11 +17,12 @@ namespace Codification\Common\Phone
 		 * @param string|null $locale = null
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
 		public function format(string $locale = null) : string
 		{
 			$util   = PhoneNumberUtil::getInstance();
-			$locale = strtoupper(Country::get($locale));
+			$locale = static::getCountry($locale);
 
 			/** @var string $result */
 			$result = $util->formatOutOfCountryCallingNumber($this->instance, $locale);
@@ -34,9 +36,12 @@ namespace Codification\Common\Phone
 		 * @param \Codification\Common\Phone\PhoneType|null $type    = null
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
 		public function isValid(string $country = null, PhoneType $type = null) : bool
 		{
+			$country = static::getCountry($country);
+
 			if ($type === null)
 			{
 				$type = PhoneType::BOTH();
@@ -71,21 +76,21 @@ namespace Codification\Common\Phone
 					return false;
 			}
 
-			$country = strtoupper(Country::get($country));
-
 			return PhoneNumberUtil::getInstance()->isValidNumberForRegion($this->instance, $country);
 		}
 
 		/**
-		 * @param null|string                               $number
-		 * @param string                                    $country
-		 * @param \Codification\Common\Phone\PhoneType|null $type = null
+		 * @param null|string                                     $number
+		 * @param string                                          $country
+		 * @param \Codification\Common\Phone\PhoneType|null       $type        = null
+		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error = null
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		public static function validate(?string $number, string $country, PhoneType $type = null) : bool
+		public static function validate(?string $number, string $country, PhoneType $type = null, ParseErrorType &$parse_error = null) : bool
 		{
-			$phone = static::make($number, $country);
+			$phone = static::make($number, $country, $parse_error);
 
 			if ($phone === null)
 			{
@@ -98,14 +103,14 @@ namespace Codification\Common\Phone
 		/**
 		 * @param string|null                                     $number
 		 * @param string                                          $country
-		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error_type = null
+		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error = null
 		 *
 		 * @return \Codification\Common\Phone\Phone|null
 		 */
-		public static function make(?string $number, string $country, ParseErrorType &$parse_error_type = null) : ?Phone
+		public static function make(?string $number, string $country, ParseErrorType &$parse_error = null) : ?Phone
 		{
 			$number  = sanitize($number);
-			$country = strtoupper(Country::get($country));
+			$country = strtoupper(sanitize($country));
 
 			try
 			{
@@ -117,13 +122,35 @@ namespace Codification\Common\Phone
 			}
 			catch (NumberParseException $e)
 			{
-				if ($parse_error_type !== null)
+				if ($parse_error !== null)
 				{
-					$parse_error_type = ParseErrorType::make($e->getErrorType());
+					$parse_error = ParseErrorType::make($e->getErrorType());
 				}
 			}
 
 			return null;
+		}
+
+		/**
+		 * @param null|string $country
+		 *
+		 * @return string
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 */
+		private static function getCountry(?string $country) : string
+		{
+			$country = sanitize($country);
+
+			if ($country === null)
+			{
+				/** @var \Illuminate\Foundation\Application $app */
+				$app     = ContainerUtils::resolve('app');
+				$country = $app->getLocale();
+			}
+
+			Country::ensureValid($country);
+
+			return strtoupper($country);
 		}
 
 		/**

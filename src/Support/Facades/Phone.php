@@ -6,7 +6,7 @@ namespace Codification\Common\Support\Facades
 
 	/**
 	 * @method static \Codification\Common\Phone\Phone|null make(string $number, string $country, \Codification\Common\Phone\ParseErrorType &$parse_error_type = null)
-	 * @method static bool validate(string $number, string $country, \Codification\Common\Phone\PhoneType|null $type = null)
+	 * @method static bool validate(string $number, string $country, \Codification\Common\Phone\PhoneType|null $type = null, \Codification\Common\Phone\ParseErrorType &$parse_error_type = null)
 	 */
 	class Phone extends Facade
 	{

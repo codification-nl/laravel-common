@@ -18,7 +18,7 @@ namespace Codification\Common\Support
 			}
 			catch (\Exception $e)
 			{
-				throw new \UnexpectedValueException('Failed to generate random bytes', 0, $e->getPrevious());
+				throw new \RuntimeException('Failed to generate random bytes', 0, $e->getPrevious());
 			}
 		}
 	}
