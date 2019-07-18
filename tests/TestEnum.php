@@ -6,15 +6,20 @@ namespace Codification\Common\Tests
 
 	/**
 	 * @method static TestEnum|string HELLO()
-	 * @method static TestEnum|string HELLO2()
+	 * @method static TestEnum|string HELLO_ALSO()
 	 * @method static TestEnum|string WORLD()
 	 * @method static TestEnum|string FOO()
 	 */
 	class TestEnum extends Enum
 	{
-		public const HELLO  = 'hello';
-		public const HELLO2 = 'hello';
-		public const WORLD  = 'world';
-		public const FOO    = 'foo';
+		protected static $hidden = [
+			TestEnum::NONE,
+		];
+
+		public const NONE       = 'none';
+		public const HELLO      = 'hello';
+		public const HELLO_ALSO = 'hello';
+		public const WORLD      = 'world';
+		public const FOO        = 'foo';
 	}
 }

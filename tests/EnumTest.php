@@ -62,7 +62,7 @@ namespace Codification\Common\Tests
 			$object = TestEnum::HELLO();
 
 			$this->assertTrue($object->eq(TestEnum::HELLO()));
-			$this->assertTrue($object->eq(TestEnum::HELLO2()));
+			$this->assertTrue($object->eq(TestEnum::HELLO_ALSO()));
 			$this->assertTrue($object->eq(TestEnumFooBar::HELLO(), false));
 
 			$this->assertNotTrue($object->eq(TestEnum::WORLD()));
@@ -77,10 +77,17 @@ namespace Codification\Common\Tests
 		}
 
 		/** @test */
+		public function it_can_have_hidden()
+		{
+			$keys = TestEnum::keys();
+			$this->assertArrayNotHasKey(TestEnum::NONE, $keys);
+		}
+
+		/** @test */
 		public function it_can_validate()
 		{
 			$this->assertTrue(TestEnum::isValid('hello'));
-			$this->assertNotTrue(TestEnum::isValid('hello2'));
+			$this->assertNotTrue(TestEnum::isValid('bye'));
 		}
 
 		/** @test */

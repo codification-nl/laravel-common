@@ -91,7 +91,7 @@ namespace Codification\Common\Enums
 		/**
 		 * @return string[]
 		 */
-		public static function names() : array
+		public static function keys() : array
 		{
 			return array_diff(array_keys(static::toArray()), static::$hidden);
 		}

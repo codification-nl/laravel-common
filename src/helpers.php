@@ -23,9 +23,9 @@ if (!function_exists('sanitize'))
 if (!function_exists('money'))
 {
 	/**
-	 * @param string|float|int|null  $value
+	 * @param mixed                  $value
 	 * @param string|\Money\Currency $currency
-	 * @param string|null            $locale
+	 * @param string|null            $locale = null
 	 *
 	 * @return \Codification\Common\Money\Money|null
 	 */
@@ -38,8 +38,8 @@ if (!function_exists('money'))
 if (!function_exists('phone'))
 {
 	/**
-	 * @param string|null $number
-	 * @param string      $country
+	 * @param string $number
+	 * @param string $country
 	 *
 	 * @return \Codification\Common\Phone\Phone|null
 	 */
@@ -54,7 +54,7 @@ if (!function_exists('array_value'))
 	/**
 	 * @param array      $array
 	 * @param int|string $key
-	 * @param mixed      $default
+	 * @param mixed      $default = null
 	 *
 	 * @return mixed
 	 */
@@ -66,6 +66,28 @@ if (!function_exists('array_value'))
 		}
 
 		return $array[$key];
+	}
+}
+
+if (!function_exists('array_unassoc'))
+{
+	/**
+	 * @param string     $key
+	 * @param string     $value
+	 * @param array      $array
+	 * @param array|null $keys = null
+	 *
+	 * @return mixed
+	 */
+	function array_unassoc(string $key, string $value, array $array, array $keys = null)
+	{
+		return array_map(function ($k, $v) use ($key, $value) : array
+			{
+				return [
+					$key   => $k,
+					$value => $v,
+				];
+			}, $keys ?: array_keys($array), $array);
 	}
 }
 
