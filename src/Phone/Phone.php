@@ -22,7 +22,7 @@ namespace Codification\Common\Phone
 		public function format(string $locale = null) : string
 		{
 			$util   = PhoneNumberUtil::getInstance();
-			$locale = static::getCountry($locale);
+			$locale = static::resolveCountry($locale);
 
 			/** @var string $result */
 			$result = $util->formatOutOfCountryCallingNumber($this->instance, $locale);
@@ -40,7 +40,7 @@ namespace Codification\Common\Phone
 		 */
 		public function isValid(string $country = null, PhoneType $type = null) : bool
 		{
-			$country = static::getCountry($country);
+			$country = static::resolveCountry($country);
 
 			if ($type === null)
 			{
@@ -137,7 +137,7 @@ namespace Codification\Common\Phone
 		 * @return string
 		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		private static function getCountry(?string $country) : string
+		private static function resolveCountry(?string $country) : string
 		{
 			$country = sanitize($country);
 
@@ -151,6 +151,29 @@ namespace Codification\Common\Phone
 			Country::ensureValid($country);
 
 			return strtoupper($country);
+		}
+
+		/**
+		 * @param null|string $number
+		 * @param string|null $locale
+		 *
+		 * @return null|string
+		 */
+		public static function getCountry(?string $number, string $locale = null) : ?string
+		{
+			$util   = PhoneNumberUtil::getInstance();
+			$number = sanitize($number);
+			$locale = static::resolveCountry($locale);
+
+			try
+			{
+				return $util->getRegionCodeForNumber($util->parse($number, $locale));
+			}
+			catch (NumberParseException $e)
+			{
+			}
+
+			return null;
 		}
 
 		/**
