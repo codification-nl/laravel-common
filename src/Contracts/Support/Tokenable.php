@@ -22,6 +22,11 @@ namespace Codification\Common\Contracts\Support
 		 *
 		 * @return string
 		 */
-		public function getToken(int $length) : string;
+		public function generateToken(int $length) : string;
+
+		/**
+		 * @return mixed
+		 */
+		public function getToken();
 	}
 }

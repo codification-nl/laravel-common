@@ -12,7 +12,7 @@ namespace Codification\Common\Support
 	{
 		public function initializeHasToken() : void
 		{
-			$this->attributes[$this->getTokenKey()] = $this->getToken($this->getTokenLength());
+			$this->attributes[$this->getTokenKey()] = $this->generateToken($this->getTokenLength());
 		}
 
 		/**
@@ -42,11 +42,19 @@ namespace Codification\Common\Support
 		}
 
 		/**
+		 * @return mixed
+		 */
+		public function getToken()
+		{
+			return $this->{$this->getTokenKey()};
+		}
+
+		/**
 		 * @param int $length
 		 *
 		 * @return string
 		 */
-		public function getToken(int $length) : string
+		public function generateToken(int $length) : string
 		{
 			return Str::random($length);
 		}
