@@ -91,6 +91,32 @@ if (!function_exists('array_unassoc'))
 	}
 }
 
+if (!function_exists('array_map_keys'))
+{
+	/**
+	 * @param \Closure $callback
+	 * @param array    $array
+	 *
+	 * @return array
+	 */
+	function array_map_keys(\Closure $callback, array $array) : array
+	{
+		$result = [];
+
+		foreach ($array as $key => $value)
+		{
+			$mapped = $callback($value, $key);
+
+			foreach ($mapped as $map_key => $map_value)
+			{
+				$result[$map_key] = $map_value;
+			}
+		}
+
+		return $result;
+	}
+}
+
 if (!function_exists('urlsafe_base64'))
 {
 	/**
