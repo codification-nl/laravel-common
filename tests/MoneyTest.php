@@ -89,5 +89,64 @@ namespace Codification\Common\Tests
 			$object = $object->add(Money::make(0.6, 'eur', 'nl'));
 			$this->assertNotTrue($object->equals($copy));
 		}
+
+		/** @test */
+		public function it_has_zero()
+		{
+			$object = Money::zero('eur', 'nl');
+			$this->assertEquals('0.00', (string)$object);
+		}
+
+		/** @test */
+		public function it_can_min()
+		{
+			$a      = Money::make(1, 'eur', 'nl');
+			$b      = Money::make(0.6, 'eur', 'nl');
+			$object = Money::min($a, $b);
+			$this->assertEquals('0.60', (string)$object);
+
+			$c      = Money::make(2, 'eur', 'nl');
+			$object = Money::min($object, $c);
+			$this->assertEquals('0.60', (string)$object);
+		}
+
+		/** @test */
+		public function it_can_max()
+		{
+			$a      = Money::make(1, 'eur', 'nl');
+			$b      = Money::make(0.6, 'eur', 'nl');
+			$object = Money::max($a, $b);
+			$this->assertEquals('1.00', (string)$object);
+
+			$c      = Money::make(2, 'eur', 'nl');
+			$object = Money::max($object, $c);
+			$this->assertEquals('2.00', (string)$object);
+		}
+
+		/** @test */
+		public function it_can_sum()
+		{
+			$a      = Money::make(1, 'eur', 'nl');
+			$b      = Money::make(0.6, 'eur', 'nl');
+			$object = Money::sum($a, $b);
+			$this->assertEquals('1.60', (string)$object);
+
+			$c      = Money::make(2, 'eur', 'nl');
+			$object = Money::sum($object, $c);
+			$this->assertEquals('3.60', (string)$object);
+		}
+
+		/** @test */
+		public function it_can_avg()
+		{
+			$a      = Money::make(1, 'eur', 'nl');
+			$b      = Money::make(0.6, 'eur', 'nl');
+			$object = Money::avg($a, $b);
+			$this->assertEquals('0.80', (string)$object);
+
+			$c      = Money::make(2, 'eur', 'nl');
+			$object = Money::avg($object, $c);
+			$this->assertEquals('1.40', (string)$object);
+		}
 	}
 }

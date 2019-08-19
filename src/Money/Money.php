@@ -23,6 +23,17 @@ namespace Codification\Common\Money
 		private $instance;
 
 		/**
+		 * @param string|\Money\Currency $currency
+		 * @param string|null            $locale
+		 *
+		 * @return $this|null
+		 */
+		public static function zero($currency, string $locale = null) : ?self
+		{
+			return Money::make(0, $currency, $locale);
+		}
+
+		/**
 		 * @param string|float|int|null  $value
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale
