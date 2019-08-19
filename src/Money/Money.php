@@ -12,6 +12,10 @@ namespace Codification\Common\Money
 	 * @method \Codification\Common\Money\Money subtract(\Codification\Common\Money\Money $other)
 	 * @method \Codification\Common\Money\Money multiply(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
 	 * @method \Codification\Common\Money\Money divide(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
+	 * @method static \Codification\Common\Money\Money min(\Codification\Common\Money\Money ...$values)
+	 * @method static \Codification\Common\Money\Money max(\Codification\Common\Money\Money ...$values)
+	 * @method static \Codification\Common\Money\Money avg(\Codification\Common\Money\Money ...$values)
+	 * @method static \Codification\Common\Money\Money sum(\Codification\Common\Money\Money ...$values)
 	 */
 	final class Money implements \JsonSerializable
 	{
@@ -65,20 +69,38 @@ namespace Codification\Common\Money
 		 */
 		public function __call(string $name, array $parameters)
 		{
+			return static::call($name, $parameters, $this->instance);
+		}
+
+		/**
+		 * @param string $name
+		 * @param array  $parameters
+		 *
+		 * @return mixed
+		 */
+		public static function __callStatic(string $name, array $parameters)
+		{
+			return static::call($name, $parameters, \Money\Money::class);
+		}
+
+		/**
+		 * @param string              $name
+		 * @param array               $parameters
+		 * @param \Money\Money|string $instance
+		 *
+		 * @return mixed
+		 */
+		private static function call(string $name, array $parameters, $instance)
+		{
 			if (is_array($parameters))
 			{
 				$parameters = array_map(function ($parameter)
 					{
-						if ($parameter instanceof static)
-						{
-							return $parameter->instance;
-						}
-
-						return $parameter;
+						return ($parameter instanceof static) ? $parameter->instance : $parameter;
 					}, $parameters);
 			}
 
-			$result = $this->instance->{$name}(...$parameters);
+			$result = call_user_func_array([$instance, $name], $parameters);
 
 			if ($result instanceof \Money\Money)
 			{
