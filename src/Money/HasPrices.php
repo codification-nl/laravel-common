@@ -86,9 +86,9 @@ namespace Codification\Common\Money
 		{
 			$parts = explode(':', $key);
 
-			if ($currency !== null)
+			if ($currency !== null && count($parts) === 2)
 			{
-				$currency = (count($parts) === 2) ? $parts[1] : 'eur';
+				$currency = $parts[1];
 			}
 
 			return $this->isPriceCastable($parts[0]);

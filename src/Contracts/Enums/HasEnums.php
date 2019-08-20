@@ -10,21 +10,6 @@ namespace Codification\Common\Contracts\Enums
 	interface HasEnums
 	{
 		/**
-		 * @param string $key
-		 *
-		 * @return mixed|\Codification\Common\Enums\Enum
-		 */
-		public function getAttributeValue($key);
-
-		/**
-		 * @param string                                $key
-		 * @param mixed|\Codification\Common\Enums\Enum $value
-		 *
-		 * @return mixed
-		 */
-		public function setAttribute($key, $value);
-
-		/**
 		 * @return string[]|\Codification\Common\Enums\Enum[]
 		 */
 		public function getEnums() : array;
