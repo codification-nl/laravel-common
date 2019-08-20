@@ -16,7 +16,7 @@ namespace Codification\Common\Database\Eloquent
 		/**
 		 * @param array|false $attributes
 		 */
-		public function __construct($attributes)
+		public function __construct($attributes = [])
 		{
 			if ($attributes !== false)
 			{
