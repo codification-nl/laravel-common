@@ -10,9 +10,17 @@ namespace Codification\Common\Money
 		/**
 		 * @return string
 		 */
-		public function castHasPrices() : string
+		public function getHasPricesType() : string
 		{
 			return \Codification\Common\Money\Money::class;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getHasPricesCast() : string
+		{
+			return 'price';
 		}
 
 		/**
@@ -23,12 +31,14 @@ namespace Codification\Common\Money
 		 */
 		public function getHasPricesValue(string $key, &$value) : bool
 		{
-			$currency = 'eur';
-
-			if (!$this->isPriceAttribute($key, $currency))
+			if (!$this->isPriceAttribute($key))
 			{
 				return false;
 			}
+
+			$cast     = $this->getCasts()[$key];
+			$parts    = explode(':', $cast, 2);
+			$currency = array_value($parts, 1, 'eur');
 
 			$value = $this->asPrice($value, $currency);
 
@@ -81,25 +91,17 @@ namespace Codification\Common\Money
 		 */
 		protected function isPriceCastable(string $key) : bool
 		{
-			return $this->hasCast($key, 'price');
+			return $this->hasCast($key, $this->getHasPricesCast());
 		}
 
 		/**
-		 * @param string       $key
-		 * @param string|null &$currency
+		 * @param string $key
 		 *
 		 * @return bool
 		 */
-		protected function isPriceAttribute(string $key, string &$currency = null) : bool
+		protected function isPriceAttribute(string $key) : bool
 		{
-			$parts = explode(':', $key);
-
-			if ($currency !== null && count($parts) === 2)
-			{
-				$currency = $parts[1];
-			}
-
-			return $this->isPriceCastable($parts[0]);
+			return $this->isPriceCastable($key);
 		}
 	}
 }

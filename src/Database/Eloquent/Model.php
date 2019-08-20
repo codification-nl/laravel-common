@@ -10,6 +10,9 @@ namespace Codification\Common\Database\Eloquent
 		/** @var string[][] */
 		protected static $traitMutators = [];
 
+		/** @var string[][] */
+		protected static $traitCasts = [];
+
 		/**
 		 * @param array|false $attributes
 		 */
@@ -32,6 +35,7 @@ namespace Codification\Common\Database\Eloquent
 
 			static::$traitAccessors[$class] = [];
 			static::$traitMutators[$class]  = [];
+			static::$traitCasts[$class]     = [];
 
 			foreach (class_uses_recursive($class) as $trait)
 			{
@@ -39,6 +43,7 @@ namespace Codification\Common\Database\Eloquent
 
 				$accessor = "get{$name}Value";
 				$mutator  = "set{$name}Value";
+				$cast     = "get{$name}Cast";
 
 				if (method_exists($class, $accessor) && !in_array($accessor, static::$traitAccessors[$class]))
 				{
@@ -48,6 +53,11 @@ namespace Codification\Common\Database\Eloquent
 				if (method_exists($class, $mutator) && !in_array($mutator, static::$traitMutators[$class]))
 				{
 					static::$traitMutators[$class][] = $mutator;
+				}
+
+				if (method_exists($class, $cast) && !in_array($cast, static::$traitCasts[$class]))
+				{
+					static::$traitCasts[$class][] = $cast;
 				}
 			}
 		}
@@ -71,6 +81,28 @@ namespace Codification\Common\Database\Eloquent
 		/**
 		 * @param string $key
 		 *
+		 * @return string
+		 */
+		protected function getCastType($key) : string
+		{
+			$cast = $this->getCasts()[$key];
+
+			foreach (static::$traitCasts[static::class] as $method)
+			{
+				$custom = $this->{$method}();
+
+				if (strncmp($cast, $custom, strlen($custom)) === 0)
+				{
+					return /** @var string $custom */ $custom;
+				}
+			}
+
+			return parent::getCastType($key);
+		}
+
+		/**
+		 * @param string $key
+		 *
 		 * @return mixed
 		 */
 		public function getAttributeValue($key)
@@ -82,9 +114,9 @@ namespace Codification\Common\Database\Eloquent
 				return null;
 			}
 
-			foreach (static::$traitAccessors[static::class] as $accessor)
+			foreach (static::$traitAccessors[static::class] as $method)
 			{
-				if ($this->{$accessor}($key, $value))
+				if ($this->{$method}($key, $value))
 				{
 					return $value;
 				}
@@ -103,9 +135,9 @@ namespace Codification\Common\Database\Eloquent
 		{
 			if ($value !== null)
 			{
-				foreach (static::$traitMutators[static::class] as $mutator)
+				foreach (static::$traitMutators[static::class] as $method)
 				{
-					if ($this->{$mutator}($key, $value))
+					if ($this->{$method}($key, $value))
 					{
 						break;
 					}
