@@ -92,16 +92,16 @@ namespace Codification\Common\Database\Schema
 		}
 
 		/**
-		 * @param string|\Illuminate\Database\Eloquent\Model     $relation
-		 * @param string|null                                    $column      = null
-		 * @param string[]|\Illuminate\Database\Eloquent\Model[] $constraints = []
+		 * @param string|\Codification\Common\Database\Eloquent\Model     $relation
+		 * @param string|null                                             $column      = null
+		 * @param string[]|\Codification\Common\Database\Eloquent\Model[] $constraints = []
 		 *
 		 * @return \Illuminate\Database\Schema\ColumnDefinition
 		 */
 		public function belongsTo(string $relation, string $column = null, array $constraints = []) : ColumnDefinition
 		{
-			/** @var \Illuminate\Database\Eloquent\Model $instance */
-			$instance = new $relation();
+			/** @var \Codification\Common\Database\Eloquent\Model $instance */
+			$instance = $relation::dummy();
 
 			if ($column === null)
 			{
@@ -110,10 +110,8 @@ namespace Codification\Common\Database\Schema
 
 			$constraints = array_map(function (string $constraint) : string
 				{
-					/** @var \Illuminate\Database\Eloquent\Model $instance */
-					$instance = new $constraint();
-
-					return $instance->getForeignKey();
+					/** @var string|\Codification\Common\Database\Eloquent\Model $constraint */
+					return $constraint::dummy()->getForeignKey();
 				}, $constraints);
 
 			$this->index(array_merge([$column], $constraints));
@@ -126,14 +124,14 @@ namespace Codification\Common\Database\Schema
 		}
 
 		/**
-		 * @param string|\Illuminate\Database\Eloquent\Model $relation
+		 * @param string|\Codification\Common\Database\Eloquent\Model $relation
 		 *
 		 * @return \Illuminate\Support\Fluent
 		 */
 		public function dropBelongsTo(string $relation) : Fluent
 		{
-			/** @var \Illuminate\Database\Eloquent\Model $instance */
-			$instance = new $relation();
+			/** @var \Codification\Common\Database\Eloquent\Model $instance */
+			$instance = $relation::dummy();
 
 			return $this->dropColumn($instance->getForeignKey());
 		}

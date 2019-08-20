@@ -2,7 +2,6 @@
 
 namespace Codification\Common\Database\Schema
 {
-	use Codification\Common\Support\ContainerUtils;
 	use Illuminate\Database\Connection;
 	use Illuminate\Database\Eloquent\Model;
 
