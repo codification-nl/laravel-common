@@ -3,6 +3,7 @@
 namespace Codification\Common\Database\Schema
 {
 	use Codification\Common\Support\ContainerUtils;
+	use Illuminate\Database\Connection;
 	use Illuminate\Database\Eloquent\Model;
 
 	class Builder extends \Illuminate\Database\Schema\Builder
@@ -17,20 +18,18 @@ namespace Codification\Common\Database\Schema
 		protected $instance = null;
 
 		/**
+		 * @param \Illuminate\Database\Connection                 $connection
 		 * @param string                                          $table
 		 * @param \Illuminate\Database\Eloquent\Model|string|null $model    = null
 		 * @param \Illuminate\Database\Eloquent\Model|null        $instance = null
 		 */
-		public function __construct(string $table, string $model = null, Model $instance = null)
+		public function __construct(Connection $connection, string $table, string $model = null, Model $instance = null)
 		{
 			$this->table    = $table;
 			$this->model    = $model;
 			$this->instance = $instance;
 
-			/** @var \Illuminate\Database\Connection $database */
-			$database = ContainerUtils::resolve('db');
-
-			parent::__construct($database);
+			parent::__construct($connection);
 		}
 
 		/**
