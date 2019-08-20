@@ -12,6 +12,7 @@ namespace Codification\Common\Money
 	 * @method \Codification\Common\Money\Money subtract(\Codification\Common\Money\Money $other)
 	 * @method \Codification\Common\Money\Money multiply(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
 	 * @method \Codification\Common\Money\Money divide(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
+	 * @methid \Codification\Common\Money\Money[] allocate(int[]|float[] $ratios)
 	 * @method static \Codification\Common\Money\Money min(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money max(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money avg(\Codification\Common\Money\Money ...$values)
@@ -26,9 +27,9 @@ namespace Codification\Common\Money
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale
 		 *
-		 * @return $this|null
+		 * @return static|null
 		 */
-		public static function zero($currency, string $locale = null) : ?self
+		public static function zero($currency, string $locale = null) : ?Money
 		{
 			return Money::make(0, $currency, $locale);
 		}
@@ -38,9 +39,9 @@ namespace Codification\Common\Money
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale
 		 *
-		 * @return $this|null
+		 * @return static|null
 		 */
-		public static function make($value, $currency, string $locale = null) : ?self
+		public static function make($value, $currency, string $locale = null) : ?Money
 		{
 			$instance = MoneyUtils::getInstance()->parse($value, $currency, $locale);
 
@@ -73,6 +74,22 @@ namespace Codification\Common\Money
 		}
 
 		/**
+		 * @return string
+		 */
+		public function getAmount() : string
+		{
+			return $this->instance->getAmount();
+		}
+
+		/**
+		 * @return \Money\Currency
+		 */
+		public function getCurrency() : \Money\Currency
+		{
+			return $this->instance->getCurrency();
+		}
+
+		/**
 		 * @param string $name
 		 * @param array  $parameters
 		 *
@@ -80,7 +97,7 @@ namespace Codification\Common\Money
 		 */
 		public function __call(string $name, array $parameters)
 		{
-			return static::call($name, $parameters, $this->instance);
+			return static::call([$this->instance, $name], $parameters);
 		}
 
 		/**
@@ -91,50 +108,83 @@ namespace Codification\Common\Money
 		 */
 		public static function __callStatic(string $name, array $parameters)
 		{
-			return static::call($name, $parameters, \Money\Money::class);
+			return static::call([\Money\Money::class, $name], $parameters);
 		}
 
 		/**
-		 * @param string              $name
-		 * @param array               $parameters
-		 * @param \Money\Money|string $instance
+		 * @param array $function
+		 * @param array $parameters
 		 *
 		 * @return mixed
 		 */
-		private static function call(string $name, array $parameters, $instance)
+		private static function call(array $function, array $parameters)
 		{
-			if (is_array($parameters))
-			{
-				$parameters = array_map(function ($parameter)
-					{
-						return ($parameter instanceof static) ? $parameter->instance : $parameter;
-					}, $parameters);
-			}
+			$parameters = static::unwrap($parameters);
 
-			$result = call_user_func_array([$instance, $name], $parameters);
+			$result = call_user_func_array($function, $parameters);
 
-			if ($result instanceof \Money\Money)
-			{
-				$instance = $result;
-
-				$result = new static();
-
-				$result->instance = $instance;
-			}
-
-			return $result;
+			return static::wrap($result);
 		}
 
 		/**
-		 * @return $this
+		 * @param mixed|\Money\Money|\Money\Money[] $value
+		 *
+		 * @return mixed|static|static[]
 		 */
-		public function copy() : self
+		private static function wrap($value)
 		{
-			$money = new static();
+			if (is_array($value))
+			{
+				return array_map(function ($item)
+					{
+						return static::wrap($item);
+					}, $value);
+			};
 
-			$money->instance = clone $this->instance;
+			if ($value instanceof \Money\Money)
+			{
+				$result = new static();
 
-			return $money;
+				$result->instance = $value;
+
+				return $result;
+			}
+
+			return $value;
+		}
+
+		/**
+		 * @param mixed|static|static[] $value
+		 *
+		 * @return mixed|\Money\Money|\Money\Money[]
+		 */
+		private static function unwrap($value)
+		{
+			if (is_array($value))
+			{
+				return array_map(function ($item)
+					{
+						return static::unwrap($item);
+					}, $value);
+			};
+
+			if ($value instanceof static)
+			{
+				return $value->instance;
+			}
+
+			return $value;
+		}
+
+		/**
+		 * @return static
+		 */
+		public function copy() : Money
+		{
+			$amount   = $this->getAmount();
+			$currency = $this->getCurrency();
+
+			return static::wrap(new \Money\Money($amount, $currency));
 		}
 
 		/**

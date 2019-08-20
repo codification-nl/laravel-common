@@ -18,40 +18,41 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param string $key
+		 * @param string                                 $key
+		 * @param mixed|\Codification\Common\Enums\Enum &$value
 		 *
-		 * @return mixed|\Codification\Common\Enums\Enum
+		 * @return bool
 		 */
-		public function getAttributeValue($key)
+		public function getHasEnumsValue(string $key, &$value) : bool
 		{
-			/** @noinspection PhpUndefinedClassInspection */
-			$value = parent::getAttributeValue($key);
-
-			if ($value !== null && $this->isEnumAttribute($key))
+			if (!$this->isEnumAttribute($key))
 			{
-				return $this->asEnum($value, $this->enums[$key]);
+				return false;
 			}
 
-			return $value;
+			$value = $this->asEnum($value, $this->enums[$key]);
+
+			return true;
 		}
 
 		/**
-		 * @param string                                $key
-		 * @param mixed|\Codification\Common\Enums\Enum $value
+		 * @param string                                 $key
+		 * @param mixed|\Codification\Common\Enums\Enum &$value
 		 *
-		 * @return mixed
+		 * @return bool
 		 */
-		public function setAttribute($key, $value)
+		public function setHasEnumsValue(string $key, &$value) : bool
 		{
-			if ($value !== null && $this->isEnumAttribute($key))
+			if (!$this->isEnumAttribute($key))
 			{
-				$this->enums[$key]::assertType($value);
-
-				$value = $this->fromEnum($value);
+				return false;
 			}
 
-			/** @noinspection PhpUndefinedClassInspection */
-			return parent::setAttribute($key, $value);
+			$this->enums[$key]::assertType($value);
+
+			$value = $this->fromEnum($value);
+
+			return true;
 		}
 
 		/**
@@ -88,9 +89,19 @@ namespace Codification\Common\Enums
 		 *
 		 * @return bool
 		 */
-		protected function isEnumAttribute(string $key) : bool
+		protected function isEnumCastable(string $key) : bool
 		{
 			return array_key_exists($key, $this->enums);
+		}
+
+		/**
+		 * @param string $key
+		 *
+		 * @return bool
+		 */
+		protected function isEnumAttribute(string $key) : bool
+		{
+			return $this->isEnumCastable($key);
 		}
 	}
 }
