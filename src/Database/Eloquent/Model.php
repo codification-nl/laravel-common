@@ -114,5 +114,13 @@ namespace Codification\Common\Database\Eloquent
 
 			return parent::setAttribute($key, $value);
 		}
+
+		/**
+		 * @return $this
+		 */
+		public static function dummy() : self
+		{
+			return new static(false);
+		}
 	}
 }
