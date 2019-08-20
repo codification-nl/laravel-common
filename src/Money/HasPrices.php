@@ -8,8 +8,16 @@ namespace Codification\Common\Money
 	trait HasPrices
 	{
 		/**
-		 * @param string        $key
-		 * @param mixed|string &$value
+		 * @return string
+		 */
+		public function castHasPrices() : string
+		{
+			return \Codification\Common\Money\Money::class;
+		}
+
+		/**
+		 * @param string                                         $key
+		 * @param mixed|string|\Codification\Common\Money\Money &$value
 		 *
 		 * @return bool
 		 */
@@ -28,8 +36,8 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param string                                  $key
-		 * @param mixed|\Codification\Common\Money\Money &$value
+		 * @param string                                         $key
+		 * @param mixed|string|\Codification\Common\Money\Money &$value
 		 *
 		 * @return bool
 		 */

@@ -18,8 +18,8 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param string                                 $key
-		 * @param mixed|\Codification\Common\Enums\Enum &$value
+		 * @param string                                            $key
+		 * @param mixed|string|int|\Codification\Common\Enums\Enum &$value
 		 *
 		 * @return bool
 		 */
@@ -36,8 +36,8 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param string                                 $key
-		 * @param mixed|\Codification\Common\Enums\Enum &$value
+		 * @param string                                            $key
+		 * @param mixed|string|int|\Codification\Common\Enums\Enum &$value
 		 *
 		 * @return bool
 		 */
