@@ -12,7 +12,7 @@ namespace Codification\Common\Money
 	 * @method \Codification\Common\Money\Money subtract(\Codification\Common\Money\Money $other)
 	 * @method \Codification\Common\Money\Money multiply(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
 	 * @method \Codification\Common\Money\Money divide(\Codification\Common\Money\Money $other, int $rounding_mode = PHP_ROUND_HALF_UP)
-	 * @methid \Codification\Common\Money\Money[] allocate(int[]|float[] $ratios)
+	 * @method \Codification\Common\Money\Money[] allocate(int[]|float[] $ratios)
 	 * @method static \Codification\Common\Money\Money min(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money max(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money avg(\Codification\Common\Money\Money ...$values)
