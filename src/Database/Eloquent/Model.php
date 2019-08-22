@@ -109,11 +109,6 @@ namespace Codification\Common\Database\Eloquent
 		{
 			$value = parent::getAttributeValue($key);
 
-			if ($value === null)
-			{
-				return null;
-			}
-
 			foreach (static::$traitAccessors[static::class] as $method)
 			{
 				if ($this->{$method}($key, $value))
@@ -133,14 +128,11 @@ namespace Codification\Common\Database\Eloquent
 		 */
 		public function setAttribute($key, $value)
 		{
-			if ($value !== null)
+			foreach (static::$traitMutators[static::class] as $method)
 			{
-				foreach (static::$traitMutators[static::class] as $method)
+				if ($this->{$method}($key, $value))
 				{
-					if ($this->{$method}($key, $value))
-					{
-						break;
-					}
+					break;
 				}
 			}
 

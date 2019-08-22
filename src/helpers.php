@@ -43,7 +43,7 @@ if (!function_exists('phone'))
 	 *
 	 * @return \Codification\Common\Phone\Phone|null
 	 */
-	function phone(?string $number, string $country) : ?Codification\Common\Phone\Phone
+	function phone(?string $number, ?string $country) : ?Codification\Common\Phone\Phone
 	{
 		return Codification\Common\Phone\Phone::make($number, $country);
 	}

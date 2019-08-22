@@ -80,15 +80,15 @@ namespace Codification\Common\Phone
 		}
 
 		/**
-		 * @param null|string                                     $number
-		 * @param string                                          $country
+		 * @param string|null                                     $number
+		 * @param string|null                                     $country
 		 * @param \Codification\Common\Phone\PhoneType|null       $type        = null
 		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error = null
 		 *
 		 * @return bool
 		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		public static function validate(?string $number, string $country, PhoneType $type = null, ParseErrorType &$parse_error = null) : bool
+		public static function validate(?string $number, ?string $country, PhoneType $type = null, ParseErrorType &$parse_error = null) : bool
 		{
 			$phone = static::make($number, $country, $parse_error);
 
@@ -102,15 +102,15 @@ namespace Codification\Common\Phone
 
 		/**
 		 * @param string|null                                     $number
-		 * @param string                                          $country
+		 * @param string|null                                     $country
 		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error = null
 		 *
 		 * @return \Codification\Common\Phone\Phone|null
 		 */
-		public static function make(?string $number, string $country, ParseErrorType &$parse_error = null) : ?Phone
+		public static function make(?string $number, ?string $country, ParseErrorType &$parse_error = null) : ?Phone
 		{
 			$number  = sanitize($number);
-			$country = strtoupper(sanitize($country));
+			$country = sanitize(strtoupper($country));
 
 			try
 			{

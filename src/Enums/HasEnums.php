@@ -25,7 +25,7 @@ namespace Codification\Common\Enums
 		 */
 		public function getHasEnumsValue(string $key, &$value) : bool
 		{
-			if (!$this->isEnumAttribute($key))
+			if ($value === null || !$this->isEnumAttribute($key))
 			{
 				return false;
 			}
@@ -43,7 +43,7 @@ namespace Codification\Common\Enums
 		 */
 		public function setHasEnumsValue(string $key, &$value) : bool
 		{
-			if (!$this->isEnumAttribute($key))
+			if ($value === null || !$this->isEnumAttribute($key))
 			{
 				return false;
 			}

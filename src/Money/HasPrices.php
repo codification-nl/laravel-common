@@ -31,7 +31,7 @@ namespace Codification\Common\Money
 		 */
 		public function getHasPricesValue(string $key, &$value) : bool
 		{
-			if (!$this->isPriceAttribute($key))
+			if ($value === null || !$this->isPriceAttribute($key))
 			{
 				return false;
 			}
@@ -53,7 +53,7 @@ namespace Codification\Common\Money
 		 */
 		public function setHasPricesValue(string $key, &$value) : bool
 		{
-			if (!$this->isPriceAttribute($key))
+			if ($value === null || !$this->isPriceAttribute($key))
 			{
 				return false;
 			}
