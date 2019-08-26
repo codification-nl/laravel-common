@@ -39,23 +39,39 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param array $value
+		 * @param array $values
 		 *
 		 * @return array
 		 */
-		public static function toArrayEnumFlags(array $value) : array
+		public static function toArrayEnumFlags(array $values) : array
 		{
-			$count = 1 << count(static::keys());
+			$keys  = array_diff(array_keys($values), static::$hidden);
+			$count = 1 << count($keys);
 
 			for ($i = 1; $i < $count; $i++)
 			{
-				if (!in_array($i, $value))
+				if (in_array($i, $values))
 				{
-					$value[] = $i;
+					continue;
 				}
+
+				$key = [];
+
+				foreach ($keys as $name)
+				{
+					if (($i & $values[$name]) !== 0)
+					{
+						$key[] = $name;
+					}
+				}
+
+				$key = implode('_', $key);
+
+				$values[$key]     = $i;
+				static::$hidden[] = $key;
 			}
 
-			return $value;
+			return $values;
 		}
 
 		/**

@@ -14,6 +14,11 @@ namespace Codification\Common\Phone
 	{
 		use \Codification\Common\Enums\EnumFlags;
 
+		protected static $hidden = [
+			'NONE',
+			'BOTH',
+		];
+
 		public const NONE   = 0;
 		public const FIXED  = 1 << 0;
 		public const MOBILE = 1 << 1;

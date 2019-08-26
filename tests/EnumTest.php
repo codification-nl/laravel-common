@@ -80,7 +80,7 @@ namespace Codification\Common\Tests
 		public function it_can_have_hidden()
 		{
 			$keys = TestEnum::keys();
-			$this->assertArrayNotHasKey(TestEnum::NONE, $keys);
+			$this->assertArrayNotHasKey('NONE', $keys);
 		}
 
 		/** @test */
@@ -152,6 +152,14 @@ namespace Codification\Common\Tests
 			$this->assertNotTrue($object->has(TestEnumHasFlags::FIRST()));
 			$this->assertNotTrue($object->has(TestEnumHasFlags::SECOND()));
 			$this->assertTrue($object->eq(TestEnumHasFlags::NONE()));
+		}
+
+		/** @test */
+		public function it_can_make_flags_combination()
+		{
+			$object = TestEnumHasFlags::make(TestEnumHasFlags::SECOND | TestEnumHasFlags::THIRD);
+			$this->assertNotTrue($object->has(TestEnumHasFlags::FIRST()));
+			$this->assertTrue($object->has(TestEnumHasFlags::THIRD()));
 		}
 
 		/** @test */

@@ -5,6 +5,7 @@ namespace Codification\Common\Tests
 	use Codification\Common\Enums\Enum;
 
 	/**
+	 * @method static TestEnum|string NONE()
 	 * @method static TestEnum|string HELLO()
 	 * @method static TestEnum|string HELLO_ALSO()
 	 * @method static TestEnum|string WORLD()
@@ -13,7 +14,7 @@ namespace Codification\Common\Tests
 	class TestEnum extends Enum
 	{
 		protected static $hidden = [
-			TestEnum::NONE,
+			'NONE',
 		];
 
 		public const NONE       = 'none';
