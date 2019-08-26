@@ -131,7 +131,7 @@ namespace Codification\Common\Enums
 					throw new \RuntimeException("[$type] does not exist", 0, $e->getPrevious());
 				}
 
-				static::$cache[$type] = $reflection->getConstants();
+				static::$cache[$type] = static::toArrayTraits($reflection->getConstants());
 			}
 
 			return static::$cache[$type];
@@ -148,26 +148,58 @@ namespace Codification\Common\Enums
 		}
 
 		/**
+		 * @param mixed         $value
+		 * @param string        $to
+		 * @param \Closure|null $cb = null
+		 *
+		 * @return mixed
+		 */
+		private static function forward($value, string $to, \Closure $cb = null)
+		{
+			$class = static::class;
+
+			foreach (class_uses_recursive($class) as $trait)
+			{
+				$trait_name  = class_basename($trait);
+				$method_name = "{$to}{$trait_name}";
+
+				if (method_exists($class, $method_name))
+				{
+					$trait_value = forward_static_call([$class, $method_name], $value);
+
+					if ($cb !== null)
+					{
+						$trait_value = $cb($value, $trait_value);
+					}
+
+					$value = $trait_value;
+				}
+			}
+
+			return $value;
+		}
+
+		/**
 		 * @param int|string $value
 		 *
 		 * @return int|string
 		 */
 		private static function initializeTraits($value)
 		{
-			$class = static::class;
+			return static::forward($value, 'initialize');
+		}
 
-			foreach (class_uses_recursive($class) as $trait)
-			{
-				$name   = class_basename($trait);
-				$method = "initialize{$name}";
-
-				if (method_exists($class, $method))
+		/**
+		 * @param array $value
+		 *
+		 * @return array
+		 */
+		private static function toArrayTraits(array $value) : array
+		{
+			return static::forward($value, 'toArray', function ($value, $trait_value)
 				{
-					$value = forward_static_call([$class, $method], $value);
-				}
-			}
-
-			return $value;
+					return array_merge($trait_value, $value);
+				});
 		}
 
 		/**

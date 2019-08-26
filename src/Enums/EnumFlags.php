@@ -39,6 +39,26 @@ namespace Codification\Common\Enums
 		}
 
 		/**
+		 * @param array $value
+		 *
+		 * @return array
+		 */
+		public static function toArrayEnumFlags(array $value) : array
+		{
+			$count = 1 << count(static::keys());
+
+			for ($i = 1; $i < $count; $i++)
+			{
+				if (!in_array($i, $value))
+				{
+					$value[] = $i;
+				}
+			}
+
+			return $value;
+		}
+
+		/**
 		 * @param \Codification\Common\Enums\Enum $enum
 		 *
 		 * @return bool
