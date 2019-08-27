@@ -190,15 +190,15 @@ namespace Codification\Common\Enums
 		}
 
 		/**
-		 * @param array $value
+		 * @param array $values
 		 *
 		 * @return array
 		 */
-		private static function toArrayTraits(array $value) : array
+		private static function toArrayTraits(array $values) : array
 		{
-			return static::forward($value, 'toArray', function ($value, $trait_value)
+			return static::forward($values, 'toArray', function ($values, $trait_values)
 				{
-					return array_merge($trait_value, $value);
+					return array_merge($trait_values, $values);
 				});
 		}
 
