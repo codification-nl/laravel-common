@@ -73,10 +73,10 @@ namespace Codification\Common\Validation\Rules
 			$target = $validator->getData();
 			$key    = sanitize($country_field) ?: "{$attribute}_country";
 
-			$country = data_get($target, $key, null);
-			$country = sanitize($country);
+			$region_code = data_get($target, $key, null);
+			$region_code = sanitize($region_code);
 
-			if ($country === null)
+			if ($region_code === null)
 			{
 				return false;
 			}
@@ -84,7 +84,7 @@ namespace Codification\Common\Validation\Rules
 			$type = intval($type);
 			$type = PhoneType::make($type);
 
-			return \Codification\Common\Phone\Phone::validate($value, $country, $type);
+			return \Codification\Common\Phone\Phone::validate($value, $region_code, $type);
 		}
 
 		/**
@@ -103,11 +103,11 @@ namespace Codification\Common\Validation\Rules
 			$target = $validator->getData();
 			$key    = sanitize($country_field) ?: "{$attribute}_country";
 
-			$country = data_get($target, $key, null);
-			$country = sanitize($country);
+			$region_code = data_get($target, $key, null);
+			$region_code = sanitize($region_code);
 
 			/** @var string $string */
-			$string = str_replace(':country', $country, $message);
+			$string = str_replace(':country', $region_code, $message);
 
 			return $string;
 		}

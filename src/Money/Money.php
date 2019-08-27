@@ -75,6 +75,16 @@ namespace Codification\Common\Money
 		}
 
 		/**
+		 * @param string|null $locale = null
+		 *
+		 * @return string
+		 */
+		public function humanize(string $locale = null) : string
+		{
+			return MoneyUtils::getInstance()->humanize($this->instance, $locale);
+		}
+
+		/**
 		 * @return int
 		 */
 		public function getCurrencyCode() : int

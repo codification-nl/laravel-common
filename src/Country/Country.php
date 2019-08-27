@@ -7,15 +7,15 @@ namespace Codification\Common\Country
 	final class Country
 	{
 		/**
-		 * @param null|string $country
+		 * @param null|string $country_code
 		 *
 		 * @return bool
 		 */
-		public static function isValid(?string $country) : bool
+		public static function isValid(?string $country_code) : bool
 		{
 			try
 			{
-				(new ISO3166())->alpha2($country);
+				(new ISO3166())->alpha2($country_code);
 			}
 			catch (\Exception $e)
 			{
@@ -26,14 +26,14 @@ namespace Codification\Common\Country
 		}
 
 		/**
-		 * @param string|null $country
+		 * @param string|null $country_code
 		 *
 		 * @return void
 		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		public static function ensureValid(?string $country) : void
+		public static function ensureValid(?string $country_code) : void
 		{
-			if (static::isValid($country))
+			if (static::isValid($country_code))
 			{
 				return;
 			}

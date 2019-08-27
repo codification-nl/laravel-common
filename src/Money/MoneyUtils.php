@@ -2,11 +2,11 @@
 
 namespace Codification\Common\Money
 {
-	use Codification\Common\Country\Country;
 	use Codification\Common\Support\ContainerUtils;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
+	use Money\Formatter\IntlMoneyFormatter;
 	use Money\Parser\AggregateMoneyParser;
 	use Money\Parser\DecimalMoneyParser;
 	use Money\Parser\IntlLocalizedDecimalParser;
@@ -27,6 +27,9 @@ namespace Codification\Common\Money
 
 		/** @var \Money\Parser\AggregateMoneyParser[] */
 		private $parsers = [];
+
+		/** @var \Money\Formatter\IntlMoneyFormatter[] */
+		private $formatters = [];
 
 		/** @var \Money\Currency[] */
 		private $currencies = [];
@@ -72,6 +75,17 @@ namespace Codification\Common\Money
 		}
 
 		/**
+		 * @param \Money\Money $instance
+		 * @param string|null  $locale = null
+		 *
+		 * @return string
+		 */
+		public function humanize(\Money\Money $instance, string $locale = null) : string
+		{
+			return $this->getFormatter($locale)->format($instance);
+		}
+
+		/**
 		 * @param string $code
 		 *
 		 * @return \Money\Currency
@@ -111,31 +125,41 @@ namespace Codification\Common\Money
 		 */
 		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
-			$locale = sanitize($locale);
-
-			if ($locale === null)
-			{
-				/** @var \Illuminate\Foundation\Application $app */
-				$app    = ContainerUtils::resolve('app');
-				$locale = $app->getLocale();
-			}
-
-			Country::ensureValid($locale);
-
-			$locale = strtolower($locale);
+			$locale = ContainerUtils::resolveLocale($locale);
 
 			if (!array_key_exists($locale, $this->parsers))
 			{
-				$formatter = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
-				$parser    = new IntlLocalizedDecimalParser($formatter, $this->isoCurrencies);
+				$number_formatter = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+				$intl_parser      = new IntlLocalizedDecimalParser($number_formatter, $this->isoCurrencies);
 
 				$this->parsers[$locale] = new AggregateMoneyParser([
 					$this->decimalParser,
-					$parser,
+					$intl_parser,
 				]);
 			}
 
 			return $this->parsers[$locale];
+		}
+
+		/**
+		 * @param string|null $locale = null
+		 *
+		 * @return \Money\Formatter\IntlMoneyFormatter
+		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 */
+		private function getFormatter(string $locale = null) : IntlMoneyFormatter
+		{
+			$locale = ContainerUtils::resolveLocale($locale);
+
+			if (!array_key_exists($locale, $this->formatters))
+			{
+				$number_formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+				$intl_formatter   = new IntlMoneyFormatter($number_formatter, $this->isoCurrencies);
+
+				$this->formatters[$locale] = $intl_formatter;
+			}
+
+			return $this->formatters[$locale];
 		}
 
 		/**

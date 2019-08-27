@@ -39,13 +39,13 @@ if (!function_exists('phone'))
 {
 	/**
 	 * @param string $number
-	 * @param string $country
+	 * @param string $region_code
 	 *
 	 * @return \Codification\Common\Phone\Phone|null
 	 */
-	function phone(?string $number, ?string $country) : ?Codification\Common\Phone\Phone
+	function phone(?string $number, ?string $region_code) : ?Codification\Common\Phone\Phone
 	{
-		return Codification\Common\Phone\Phone::make($number, $country);
+		return Codification\Common\Phone\Phone::make($number, $region_code);
 	}
 }
 
