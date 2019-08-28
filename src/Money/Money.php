@@ -34,7 +34,7 @@ namespace Codification\Common\Money
 
 		/**
 		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param string|null            $locale = null
 		 *
 		 * @return static|null
 		 */
@@ -46,7 +46,7 @@ namespace Codification\Common\Money
 		/**
 		 * @param string|float|int|null  $value
 		 * @param string|\Money\Currency $currency
-		 * @param string|null            $locale
+		 * @param string|null            $locale = null
 		 *
 		 * @return static|null
 		 */
