@@ -109,14 +109,12 @@ namespace Codification\Common\Phone
 		 */
 		protected function isPhoneCastable(string $key) : bool
 		{
-			$region_code = $this->getPhoneRegionCode($key);
-
-			if ($region_code === null)
+			if (!$this->hasCast($key, $this->getHasPhoneNumbersCast()))
 			{
 				return false;
 			}
 
-			return $this->hasCast($key, $this->getHasPhoneNumbersCast());
+			return ($this->getPhoneRegionCode($key) !== null);
 		}
 
 		/**

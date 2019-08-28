@@ -85,19 +85,19 @@ namespace Codification\Common\Database\Eloquent
 		 */
 		protected function getCastType($key) : string
 		{
-			$cast = $this->getCasts()[$key];
+			$type = parent::getCastType($key);
 
 			foreach (static::$traitCasts[static::class] as $method)
 			{
 				$custom = $this->{$method}();
 
-				if (strncmp($cast, $custom, strlen($custom)) === 0)
+				if (strncmp($type, $custom, strlen($custom)) === 0)
 				{
 					return /** @var string $custom */ $custom;
 				}
 			}
 
-			return parent::getCastType($key);
+			return $type;
 		}
 
 		/**
