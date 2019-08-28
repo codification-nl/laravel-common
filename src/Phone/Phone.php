@@ -2,7 +2,6 @@
 
 namespace Codification\Common\Phone
 {
-	use Codification\Common\Country\Country;
 	use Codification\Common\Support\ContainerUtils;
 	use libphonenumber\NumberParseException;
 	use libphonenumber\PhoneNumberType;
@@ -14,18 +13,18 @@ namespace Codification\Common\Phone
 		private $instance;
 
 		/**
-		 * @param string|null $locale = null
+		 * @param string|null $region_code = null
 		 *
 		 * @return string
 		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
 		 */
-		public function format(string $locale = null) : string
+		public function format(string $region_code = null) : string
 		{
-			$util   = PhoneNumberUtil::getInstance();
-			$locale = ContainerUtils::resolveLocale($locale, CASE_UPPER);
+			$util        = PhoneNumberUtil::getInstance();
+			$region_code = ContainerUtils::resolveLocale($region_code, CASE_UPPER);
 
 			/** @var string $result */
-			$result = $util->formatOutOfCountryCallingNumber($this->instance, $locale);
+			$result = $util->formatOutOfCountryCallingNumber($this->instance, $region_code);
 			$result = str_replace(' ', '', $result);
 
 			return $result;
@@ -133,19 +132,19 @@ namespace Codification\Common\Phone
 
 		/**
 		 * @param null|string $number
-		 * @param string|null $locale
+		 * @param string|null $region_code
 		 *
 		 * @return null|string
 		 */
-		public static function getCountry(?string $number, string $locale = null) : ?string
+		public static function getRegionCode(?string $number, string $region_code = null) : ?string
 		{
-			$util   = PhoneNumberUtil::getInstance();
-			$number = sanitize($number);
-			$locale = ContainerUtils::resolveLocale($locale, CASE_UPPER);
+			$util        = PhoneNumberUtil::getInstance();
+			$number      = sanitize($number);
+			$region_code = ContainerUtils::resolveLocale($region_code, CASE_UPPER);
 
 			try
 			{
-				return $util->getRegionCodeForNumber($util->parse($number, $locale));
+				return $util->getRegionCodeForNumber($util->parse($number, $region_code));
 			}
 			catch (NumberParseException $e)
 			{

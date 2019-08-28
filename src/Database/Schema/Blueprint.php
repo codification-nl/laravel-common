@@ -45,11 +45,11 @@ namespace Codification\Common\Database\Schema
 
 		/**
 		 * @param string|null $column = null
-		 * @param int         $length = 60
+		 * @param int|null    $length = 60
 		 *
 		 * @return \Illuminate\Database\Schema\ColumnDefinition
 		 */
-		public function token(string $column = null, int $length = 60) : ColumnDefinition
+		public function token(string $column = null, int $length = null) : ColumnDefinition
 		{
 			if ($column === null)
 			{
@@ -62,10 +62,14 @@ namespace Codification\Common\Database\Schema
 				}
 
 				$column = $tokenable->getTokenKey();
-				$length = $tokenable->getTokenLength();
+
+				if ($length === null)
+				{
+					$length = $tokenable->getTokenLength();
+				}
 			}
 
-			return $this->string($column, $length);
+			return $this->string($column, $length ?: 60);
 		}
 
 		/**

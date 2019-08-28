@@ -129,8 +129,8 @@ namespace Codification\Common\Money
 
 			if (!array_key_exists($locale, $this->parsers))
 			{
-				$number_formatter = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
-				$intl_parser      = new IntlLocalizedDecimalParser($number_formatter, $this->isoCurrencies);
+				$formatter   = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+				$intl_parser = new IntlLocalizedDecimalParser($formatter, $this->isoCurrencies);
 
 				$this->parsers[$locale] = new AggregateMoneyParser([
 					$this->decimalParser,
@@ -153,8 +153,8 @@ namespace Codification\Common\Money
 
 			if (!array_key_exists($locale, $this->formatters))
 			{
-				$number_formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-				$intl_formatter   = new IntlMoneyFormatter($number_formatter, $this->isoCurrencies);
+				$formatter      = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+				$intl_formatter = new IntlMoneyFormatter($formatter, $this->isoCurrencies);
 
 				$this->formatters[$locale] = $intl_formatter;
 			}
