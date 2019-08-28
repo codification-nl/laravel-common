@@ -3,7 +3,7 @@
 namespace Codification\Common\Tests
 {
 	use Codification\Common\Country\Country;
-	use Codification\Common\Country\Exceptions\InvalidCountryCodeException;
+	use Codification\Common\Country\Exceptions\CountryCodeException;
 	use Illuminate\Support\Facades\Validator;
 
 	class CountryTest extends TestCase
@@ -18,7 +18,7 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_can_assert()
 		{
-			$this->expectException(InvalidCountryCodeException::class);
+			$this->expectException(CountryCodeException::class);
 			Country::ensureValid('abc');
 		}
 

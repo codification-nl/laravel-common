@@ -60,12 +60,7 @@ if (!function_exists('array_value'))
 	 */
 	function array_value(array $array, $key, $default = null)
 	{
-		if (!array_key_exists($key, $array))
-		{
-			return $default;
-		}
-
-		return $array[$key];
+		return $array[$key] ?? $default;
 	}
 }
 
@@ -87,7 +82,7 @@ if (!function_exists('array_unassoc'))
 					$key   => $k,
 					$value => $v,
 				];
-			}, $keys ?: array_keys($array), $array);
+			}, $keys ?? array_keys($array), $array);
 	}
 }
 

@@ -89,7 +89,7 @@ namespace Codification\Common\Money
 		 * @param string $code
 		 *
 		 * @return \Money\Currency
-		 * @throws \Codification\Common\Money\Exceptions\CurrencyException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 */
 		private function getCurrency(string $code) : Currency
 		{
@@ -97,7 +97,7 @@ namespace Codification\Common\Money
 
 			if ($code === null)
 			{
-				throw new Exceptions\CurrencyException();
+				throw new Exceptions\CurrencyCodeException();
 			}
 
 			$code = strtoupper($code);
@@ -108,7 +108,7 @@ namespace Codification\Common\Money
 
 				if (!$this->isoCurrencies->contains($currency))
 				{
-					throw new Exceptions\CurrencyException();
+					throw new Exceptions\CurrencyCodeException($currency->getCode());
 				}
 
 				$this->currencies[$code] = $currency;
@@ -121,7 +121,7 @@ namespace Codification\Common\Money
 		 * @param string|null $locale = null
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
@@ -145,7 +145,7 @@ namespace Codification\Common\Money
 		 * @param string|null $locale = null
 		 *
 		 * @return \Money\Formatter\IntlMoneyFormatter
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		private function getFormatter(string $locale = null) : IntlMoneyFormatter
 		{
@@ -168,8 +168,8 @@ namespace Codification\Common\Money
 		 * @param string|null            $locale = null
 		 *
 		 * @return \Money\Money
-		 * @throws \Codification\Common\Money\Exceptions\CurrencyException
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{

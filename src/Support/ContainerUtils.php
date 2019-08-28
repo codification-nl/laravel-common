@@ -30,7 +30,7 @@ namespace Codification\Common\Support
 		 * @param int         $case = CASE_LOWER
 		 *
 		 * @return string
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public static function resolveLocale(string $locale = null, int $case = CASE_LOWER) : string
 		{

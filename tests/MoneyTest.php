@@ -2,8 +2,8 @@
 
 namespace Codification\Common\Tests
 {
-	use Codification\Common\Money\Exceptions\CurrencyException;
-	use Codification\Common\Country\Exceptions\InvalidCountryCodeException;
+	use Codification\Common\Money\Exceptions\CurrencyCodeException;
+	use Codification\Common\Country\Exceptions\CountryCodeException;
 	use Codification\Common\Money\Money;
 
 	class MoneyTest extends TestCase
@@ -25,14 +25,14 @@ namespace Codification\Common\Tests
 		/** @test */
 		public function it_throws_on_invalid_currency()
 		{
-			$this->expectException(CurrencyException::class);
+			$this->expectException(CurrencyCodeException::class);
 			Money::make(1, 'abc', 'nl');
 		}
 
 		/** @test */
 		public function it_throws_on_invalid_locale()
 		{
-			$this->expectException(InvalidCountryCodeException::class);
+			$this->expectException(CountryCodeException::class);
 			Money::make(1, 'eur', 'abc');
 		}
 

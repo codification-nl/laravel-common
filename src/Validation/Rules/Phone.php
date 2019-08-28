@@ -71,7 +71,7 @@ namespace Codification\Common\Validation\Rules
 			[$country_field, $type] = $parameters;
 
 			$target = $validator->getData();
-			$key    = sanitize($country_field) ?: "{$attribute}_country";
+			$key    = sanitize($country_field) ?? "{$attribute}_country";
 
 			$region_code = data_get($target, $key, null);
 			$region_code = sanitize($region_code);
@@ -101,7 +101,7 @@ namespace Codification\Common\Validation\Rules
 			[$country_field] = $parameters;
 
 			$target = $validator->getData();
-			$key    = sanitize($country_field) ?: "{$attribute}_country";
+			$key    = sanitize($country_field) ?? "{$attribute}_country";
 
 			$region_code = data_get($target, $key, null);
 			$region_code = sanitize($region_code);

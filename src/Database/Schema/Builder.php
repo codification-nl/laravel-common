@@ -100,7 +100,7 @@ namespace Codification\Common\Database\Schema
 		 */
 		public function dropIfExists($table = null)
 		{
-			$this->table($table ?: $this->table, function (Blueprint $table) : void
+			$this->table($table ?? $this->table, function (Blueprint $table) : void
 				{
 					$table->dropIfExists();
 				});
@@ -113,7 +113,7 @@ namespace Codification\Common\Database\Schema
 		 */
 		public function drop($table = null)
 		{
-			$this->table($table ?: $this->table, function (Blueprint $table) : void
+			$this->table($table ?? $this->table, function (Blueprint $table) : void
 				{
 					$table->drop();
 				});

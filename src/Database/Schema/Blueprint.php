@@ -69,7 +69,7 @@ namespace Codification\Common\Database\Schema
 				}
 			}
 
-			return $this->string($column, $length ?: 60);
+			return $this->string($column, $length ?? 60);
 		}
 
 		/**

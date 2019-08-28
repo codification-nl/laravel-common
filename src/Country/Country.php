@@ -29,7 +29,7 @@ namespace Codification\Common\Country
 		 * @param string|null $country_code
 		 *
 		 * @return void
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public static function ensureValid(?string $country_code) : void
 		{
@@ -38,7 +38,7 @@ namespace Codification\Common\Country
 				return;
 			}
 
-			throw new Exceptions\InvalidCountryCodeException();
+			throw new Exceptions\CountryCodeException($country_code);
 		}
 	}
 }

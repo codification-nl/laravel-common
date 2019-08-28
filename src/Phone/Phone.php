@@ -16,7 +16,7 @@ namespace Codification\Common\Phone
 		 * @param string|null $region_code = null
 		 *
 		 * @return string
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public function format(string $region_code = null) : string
 		{
@@ -35,7 +35,7 @@ namespace Codification\Common\Phone
 		 * @param \Codification\Common\Phone\PhoneType|null $type        = null
 		 *
 		 * @return bool
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public function isValid(string $region_code = null, PhoneType $type = null) : bool
 		{
@@ -85,7 +85,7 @@ namespace Codification\Common\Phone
 		 * @param \Codification\Common\Phone\ParseErrorType|null &$parse_error = null
 		 *
 		 * @return bool
-		 * @throws \Codification\Common\Country\Exceptions\InvalidCountryCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public static function validate(?string $number, ?string $region_code, PhoneType $type = null, ParseErrorType &$parse_error = null) : bool
 		{
