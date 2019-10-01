@@ -2,9 +2,13 @@ image: php:7.3.6
 pipelines:
   default:
     - step:
+        name: Test
+        caches:
+          - composer
         script:
-          - apt-get update && apt-get install -y git unzip libicu-dev
+          - apt-get update && apt-get install -qy git unzip libicu-dev
           - docker-php-ext-install intl
+          - docker-php-ext-install bcmath
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
-          - vendor/bin/phpunit
+          - ./vendor/bin/phpunit --verbose
