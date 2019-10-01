@@ -4,6 +4,8 @@ pipelines:
     - step:
         name: Test
         caches:
+          - php-ext-source
+          - php-ext
           - composer
         script:
           - apt-get update && apt-get install -qy git unzip libicu-dev
@@ -12,3 +14,7 @@ pipelines:
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - ./vendor/bin/phpunit --verbose
+definitions:
+ caches:
+    php-ext-source: /usr/src/php/ext
+    php-ext: /usr/local/lib/php/extensions
