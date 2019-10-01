@@ -23,6 +23,7 @@ namespace Codification\Common\Support\Providers
 		/** @var string[] */
 		private $facades = [
 			'country' => \Codification\Common\Country\Country::class,
+			'math'    => \Codification\Math\Math::class,
 			'money'   => \Codification\Common\Money\Money::class,
 			'phone'   => \Codification\Common\Phone\Phone::class,
 		];

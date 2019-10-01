@@ -15,6 +15,7 @@
 		"php": "^7.2",
 		"ext-intl": "*",
 		"ext-json": "*",
+		"codification/php-math": "dev-master",
 		"giggsey/libphonenumber-for-php": "^8.10",
 		"illuminate/database": "^6.0",
 		"illuminate/pagination": "^6.0",
@@ -53,9 +54,16 @@
 			],
 			"aliases": {
 				"Country": "Codification\\Common\\Support\\Facades\\Country",
+				"Math": "Codification\\Common\\Support\\Facades\\Math",
 				"Money": "Codification\\Common\\Support\\Facades\\Money",
 				"Phone": "Codification\\Common\\Support\\Facades\\Phone"
 			}
 		}
-	}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git@bitbucket.org:codification-nl/php-math.git"
+		}
+	]
 }
