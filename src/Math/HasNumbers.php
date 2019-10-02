@@ -82,7 +82,7 @@ namespace Codification\Common\Math
 		 */
 		public function asNumber($value, int $scale = null) : \Codification\Math\Number
 		{
-			return new \Codification\Math\Number($value, $scale);
+			return number($value, $scale);
 		}
 
 		/**

@@ -36,7 +36,7 @@ namespace Codification\Common\Money
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale = null
 		 *
-		 * @return static|null
+		 * @return \Codification\Common\Money\Money|null
 		 */
 		public static function zero($currency, string $locale = null) : ?Money
 		{
@@ -48,7 +48,7 @@ namespace Codification\Common\Money
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale = null
 		 *
-		 * @return static|null
+		 * @return \Codification\Common\Money\Money|null
 		 */
 		public static function make($value, $currency, string $locale = null) : ?Money
 		{
@@ -148,7 +148,7 @@ namespace Codification\Common\Money
 		/**
 		 * @param mixed|\Money\Money|\Money\Money[] $value
 		 *
-		 * @return mixed|static|static[]
+		 * @return mixed|\Codification\Common\Money\Money|\Codification\Common\Money\Money[]
 		 */
 		private static function wrap($value)
 		{
@@ -173,7 +173,7 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param mixed|static|static[] $value
+		 * @param mixed|\Codification\Common\Money\Money|\Codification\Common\Money\Money[] $value
 		 *
 		 * @return mixed|\Money\Money|\Money\Money[]
 		 */
@@ -196,14 +196,27 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @return static
+		 * @return \Codification\Common\Money\Money
 		 */
 		public function copy() : Money
 		{
-			$amount   = $this->getAmount();
-			$currency = $this->getCurrency();
+			return clone $this;
+		}
 
-			return static::wrap(new \Money\Money($amount, $currency));
+		/**
+		 * @return \Codification\Common\Money\Money
+		 */
+		public function clone() : Money
+		{
+			return clone $this;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function jsonSerialize()
+		{
+			return $this->format();
 		}
 
 		/**
@@ -215,11 +228,14 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @return string
+		 * @return \Codification\Common\Money\Money
 		 */
-		public function jsonSerialize()
+		public function __clone()
 		{
-			return $this->format();
+			$amount   = $this->getAmount();
+			$currency = $this->getCurrency();
+
+			return static::wrap(new \Money\Money($amount, $currency));
 		}
 	}
 }

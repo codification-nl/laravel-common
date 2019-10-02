@@ -9,12 +9,11 @@ pipelines:
           - composer
         script:
           - apt-get update && apt-get install -qy git unzip libicu-dev
-          - docker-php-ext-install intl
-          - docker-php-ext-install bcmath
+          - docker-php-ext-install intl bcmath
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - ./vendor/bin/phpunit --verbose
 definitions:
- caches:
+  caches:
     php-ext-source: /usr/src/php/ext
     php-ext: /usr/local/lib/php/extensions
