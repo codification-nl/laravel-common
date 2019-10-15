@@ -112,6 +112,28 @@ if (!function_exists('array_map_keys'))
 	}
 }
 
+if (!function_exists('array_reduce_assoc'))
+{
+	/**
+	 * @param array    $input
+	 * @param \Closure $callback
+	 * @param mixed    $initial = null
+	 *
+	 * @return array
+	 */
+	function array_reduce_assoc(array $input, \Closure $callback, $initial = null) : array
+	{
+		$result = $initial;
+
+		foreach ($input as $key => $value)
+		{
+			$result = $callback($result, $value, $key);
+		}
+
+		return $result;
+	}
+}
+
 if (!function_exists('urlsafe_base64'))
 {
 	/**
