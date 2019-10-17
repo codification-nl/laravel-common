@@ -21,7 +21,13 @@ namespace Codification\Common\Phone
 		 */
 		public function format(string $region_code = null) : string
 		{
-			$util        = PhoneNumberUtil::getInstance();
+			$util = PhoneNumberUtil::getInstance();
+
+			if ($region_code === '*')
+			{
+				return $util->format($this->instance, PhoneNumberFormat::E164);
+			}
+
 			$region_code = ContainerUtils::resolveLocale($region_code, CASE_UPPER);
 
 			/** @var string $result */
