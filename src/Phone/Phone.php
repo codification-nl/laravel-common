@@ -4,6 +4,7 @@ namespace Codification\Common\Phone
 {
 	use Codification\Common\Support\ContainerUtils;
 	use libphonenumber\NumberParseException;
+	use libphonenumber\PhoneNumberFormat;
 	use libphonenumber\PhoneNumberType;
 	use libphonenumber\PhoneNumberUtil;
 
@@ -28,6 +29,14 @@ namespace Codification\Common\Phone
 			$result = str_replace(' ', '', $result);
 
 			return $result;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function humanize() : string
+		{
+			return PhoneNumberUtil::getInstance()->format($this->instance, PhoneNumberFormat::NATIONAL);
 		}
 
 		/**
