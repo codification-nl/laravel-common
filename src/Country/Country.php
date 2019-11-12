@@ -12,7 +12,7 @@ namespace Codification\Common\Country
 		 *
 		 * @return bool
 		 */
-		public static function isValid($country_code) : bool
+		public static function isValid(?string $country_code) : bool
 		{
 			$country_code = sanitize($country_code);
 

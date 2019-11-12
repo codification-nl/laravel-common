@@ -14,7 +14,7 @@ namespace Codification\Common\Test\TestCase
 	class TestEnum extends Enum\Enum
 	{
 		/**
-		 * @var array<int, string>
+		 * @var string[]
 		 * @psalm-var list<string>
 		 */
 		protected static $hidden = [
