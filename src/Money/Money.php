@@ -2,6 +2,11 @@
 
 namespace Codification\Common\Money
 {
+	use Codification\Common\Contracts\Support\Cloneable;
+	use Codification\Common\Contracts\Support\Stringable;
+	use Codification\Common\Support\Contracts;
+	use Codification\Common\Support\Exceptions\ShouldNotHappenException;
+
 	/**
 	 * @method bool equals(\Codification\Common\Money\Money $other)
 	 * @method bool greaterThan(\Codification\Common\Money\Money $other)
@@ -26,17 +31,23 @@ namespace Codification\Common\Money
 	 * @method static \Codification\Common\Money\Money max(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money avg(\Codification\Common\Money\Money ...$values)
 	 * @method static \Codification\Common\Money\Money sum(\Codification\Common\Money\Money ...$values)
+	 *
+	 * @template-implements \Codification\Common\Contracts\Support\Cloneable<\Codification\Common\Money\Money>
 	 */
-	final class Money implements \JsonSerializable
+	final class Money implements Contracts\Bindable, Stringable, Cloneable
 	{
-		/** @var \Money\Money */
-		private $instance;
+		/** @var \Money\Money|null */
+		private $instance = null;
 
 		/**
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale = null
 		 *
 		 * @return \Codification\Common\Money\Money|null
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Money\Exceptions\ParseException
 		 */
 		public static function zero($currency, string $locale = null) : ?Money
 		{
@@ -45,10 +56,15 @@ namespace Codification\Common\Money
 
 		/**
 		 * @param string|float|int|null  $value
+		 * @psalm-param numeric|null     $value
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale = null
 		 *
 		 * @return \Codification\Common\Money\Money|null
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Money\Exceptions\ParseException
 		 */
 		public static function make($value, $currency, string $locale = null) : ?Money
 		{
@@ -68,44 +84,53 @@ namespace Codification\Common\Money
 
 		/**
 		 * @return string
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 */
 		public function format() : string
 		{
-			return MoneyUtils::getInstance()->format($this->instance);
+			return MoneyUtils::getInstance()->format($this->ensureInstance());
 		}
 
 		/**
 		 * @param string|null $locale = null
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
 		 */
 		public function humanize(string $locale = null) : string
 		{
-			return MoneyUtils::getInstance()->humanize($this->instance, $locale);
+			return MoneyUtils::getInstance()->humanize($this->ensureInstance(), $locale);
 		}
 
 		/**
 		 * @return int
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 */
 		public function getCurrencyCode() : int
 		{
-			return MoneyUtils::getInstance()->getCurrencyCode($this->instance);
+			return MoneyUtils::getInstance()->getCurrencyCode($this->ensureInstance());
 		}
 
 		/**
 		 * @return string
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function getAmount() : string
 		{
-			return $this->instance->getAmount();
+			return $this->ensureInstance()->getAmount();
 		}
 
 		/**
 		 * @return \Money\Currency
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function getCurrency() : \Money\Currency
 		{
-			return $this->instance->getCurrency();
+			return $this->ensureInstance()->getCurrency();
 		}
 
 		/**
@@ -113,10 +138,11 @@ namespace Codification\Common\Money
 		 * @param array  $parameters
 		 *
 		 * @return mixed
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function __call(string $name, array $parameters)
 		{
-			return static::call([$this->instance, $name], $parameters);
+			return static::call([$this->ensureInstance(), $name], $parameters);
 		}
 
 		/**
@@ -124,6 +150,7 @@ namespace Codification\Common\Money
 		 * @param array  $parameters
 		 *
 		 * @return mixed
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public static function __callStatic(string $name, array $parameters)
 		{
@@ -132,28 +159,38 @@ namespace Codification\Common\Money
 
 		/**
 		 * @param array $function
+		 * @psalm-param  array{0: \Money\Money|class-string<\Money\Money>, 1: string} $function
 		 * @param array $parameters
 		 *
 		 * @return mixed
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
-		private static function call(array $function, array $parameters)
+		private static function call($function, array $parameters)
 		{
-			$parameters = static::unwrap($parameters);
+			/**
+			 * @var array<int, mixed> $params
+			 * @psalm-var list $params
+			 */
+			$params = static::unwrap($parameters);
 
-			$result = call_user_func_array($function, $parameters);
+			/** @var mixed $result */
+			$result = call_user_func_array($function, $params);
 
 			return static::wrap($result);
 		}
 
 		/**
-		 * @param mixed|\Money\Money|\Money\Money[] $value
+		 * @param mixed|array<int, mixed> $value
+		 * @psalm-var    mixed|list $value
 		 *
-		 * @return mixed|\Codification\Common\Money\Money|\Codification\Common\Money\Money[]
+		 * @return mixed|array<int, mixed>
+		 * @psalm-return mixed|list
 		 */
 		private static function wrap($value)
 		{
 			if (is_array($value))
 			{
+				/** @psalm-suppress MissingClosureReturnType */
 				return array_map(function ($item)
 					{
 						return static::wrap($item);
@@ -164,7 +201,7 @@ namespace Codification\Common\Money
 			{
 				$result = new static();
 
-				$result->instance = $value;
+				$result->instance = clone $value;
 
 				return $result;
 			}
@@ -173,14 +210,18 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param mixed|\Codification\Common\Money\Money|\Codification\Common\Money\Money[] $value
+		 * @param mixed|array<int, mixed> $value
+		 * @psalm-var    mixed|list $value
 		 *
-		 * @return mixed|\Money\Money|\Money\Money[]
+		 * @return mixed|array<int, mixed>
+		 * @psalm-return mixed|list
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		private static function unwrap($value)
 		{
 			if (is_array($value))
 			{
+				/** @psalm-suppress MissingClosureReturnType */
 				return array_map(function ($item)
 					{
 						return static::unwrap($item);
@@ -189,7 +230,7 @@ namespace Codification\Common\Money
 
 			if ($value instanceof static)
 			{
-				return $value->instance;
+				return $value->ensureInstance();
 			}
 
 			return $value;
@@ -213,6 +254,8 @@ namespace Codification\Common\Money
 
 		/**
 		 * @return string
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function jsonSerialize()
 		{
@@ -221,21 +264,61 @@ namespace Codification\Common\Money
 
 		/**
 		 * @return string
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function __toString() : string
+		{
+			return $this->toString();
+		}
+
+		/**
+		 * @return string
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 */
+		public function toString() : string
 		{
 			return $this->format();
 		}
 
 		/**
 		 * @return \Codification\Common\Money\Money
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function __clone()
 		{
 			$amount   = $this->getAmount();
 			$currency = $this->getCurrency();
 
-			return static::wrap(new \Money\Money($amount, $currency));
+			try
+			{
+				/**
+				 * @var \Codification\Common\Money\Money $clone
+				 * @psalm-suppress MissingThrowsDocblock
+				 */
+				$clone = static::wrap(new \Money\Money($amount, $currency));
+			}
+			catch (\InvalidArgumentException $e)
+			{
+				throw new ShouldNotHappenException('Failed to instantiate [Money]', $e);
+			}
+
+			return $clone;
+		}
+
+		/**
+		 * @return \Money\Money
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 */
+		private function ensureInstance() : \Money\Money
+		{
+			if ($this->instance === null)
+			{
+				throw new ShouldNotHappenException('$this->instance === null');
+			}
+
+			return $this->instance;
 		}
 	}
 }

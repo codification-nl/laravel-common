@@ -4,6 +4,8 @@ namespace Codification\Common\Support\Providers
 {
 	use Codification\Common\Support\CollectionUtils;
 	use Codification\Common\Support\ContainerUtils;
+	use Codification\Common\Support\Exceptions\ResolutionException;
+	use Codification\Common\Support\Exceptions\ShouldNotHappenException;
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Support\Collection;
@@ -11,7 +13,10 @@ namespace Codification\Common\Support\Providers
 
 	class CommonServiceProvider extends ServiceProvider
 	{
-		/** @var \Codification\Common\Validation\Contracts\ValidatorRule[] */
+		/**
+		 * @var array<string, string>
+		 * @psalm-var array<string, class-string<\Codification\Common\Validation\Contracts\ValidatorRule>>
+		 */
 		private $validators = [
 			'country'  => \Codification\Common\Validation\Rules\Country::class,
 			'enum'     => \Codification\Common\Validation\Rules\Enum::class,
@@ -20,7 +25,10 @@ namespace Codification\Common\Support\Providers
 			'phone'    => \Codification\Common\Validation\Rules\Phone::class,
 		];
 
-		/** @var string[] */
+		/**
+		 * @var array<string, string>
+		 * @psalm-var array<string, class-string>
+		 */
 		private $facades = [
 			'country' => \Codification\Common\Country\Country::class,
 			'math'    => \Codification\Math\Math::class,
@@ -37,6 +45,7 @@ namespace Codification\Common\Support\Providers
 			{
 				$this->app->bind($abstract, function () use ($class)
 					{
+						/** @psalm-var class-string<\Codification\Common\Contracts\Support\Bindable> $class */
 						return new $class();
 					});
 			}
@@ -45,6 +54,7 @@ namespace Codification\Common\Support\Providers
 		/**
 		 * @return void
 		 * @throws \ReflectionException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function boot() : void
 		{
@@ -55,15 +65,28 @@ namespace Codification\Common\Support\Providers
 
 		/**
 		 * @return void
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		private function extendValidator() : void
 		{
-			/** @var \Illuminate\Validation\Factory $factory */
-			$factory = ContainerUtils::resolve('validator');
+			try
+			{
+				/** @var \Illuminate\Validation\Factory $factory */
+				$factory = ContainerUtils::resolve('validator');
+			}
+			catch (ResolutionException $e)
+			{
+				throw new ShouldNotHappenException('Failed to resolve [validator]', $e);
+			}
 
 			foreach ($this->validators as $rule => $validator)
 			{
 				$implements = class_implements($validator);
+
+				if ($implements === false)
+				{
+					throw new ShouldNotHappenException("Failed to get interfaces of [$validator]");
+				}
 
 				if (in_array(ValidatorRule::class, $implements))
 				{

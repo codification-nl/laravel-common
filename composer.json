@@ -1,6 +1,7 @@
 {
 	"name": "codification/laravel-common",
 	"description": "Common Laravel",
+	"type": "library",
 	"homepage": "https://bitbucket.org/codification-nl/laravel-common",
 	"license": "MIT",
 	"authors": [
@@ -25,12 +26,16 @@
 		"moneyphp/money": "^3.2"
 	},
 	"require-dev": {
+		"bmitch/churn-php": "^1.0",
 		"orchestra/testbench": "^3.8",
-		"phpunit/phpunit": "^8.0"
+		"phpunit/phpunit": "^8.0",
+		"povils/phpmnd": "^2.1",
+		"psalm/plugin-phpunit": "^0.7.0",
+		"vimeo/psalm": "^3.6"
 	},
 	"autoload": {
 		"psr-4": {
-			"Codification\\Common\\": "src"
+			"Codification\\Common\\": "src/"
 		},
 		"files": [
 			"src/helpers.php"
@@ -38,11 +43,20 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Codification\\Common\\Tests\\": "tests/"
+			"Codification\\Common\\Test\\": "tests/"
 		}
 	},
 	"scripts": {
-		"test": "vendor/bin/phpunit"
+		"check": [
+			"@analyze",
+			"@phpmnd",
+			"@test",
+			"@churn"
+		],
+		"test": "vendor/bin/phpunit",
+		"analyze": "vendor/bin/psalm",
+		"churn": "vendor/bin/churn run src",
+		"phpmnd": "vendor/bin/phpmnd src"
 	},
 	"config": {
 		"sort-packages": true

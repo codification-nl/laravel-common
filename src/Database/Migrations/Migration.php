@@ -4,24 +4,38 @@ namespace Codification\Common\Database\Migrations
 {
 	use Codification\Common\Database\Schema\Builder;
 	use Codification\Common\Support\ContainerUtils;
+	use Codification\Common\Support\Exceptions;
 
+	/**
+	 * @template T of \Illuminate\Database\Eloquent\Model
+	 */
 	abstract class Migration extends \Illuminate\Database\Migrations\Migration
 	{
-		/** @var string */
+		/** @var string|null */
 		protected $table = null;
 
-		/** @var string */
+		/** @var string|null */
 		protected $connection = null;
 
-		/** @var \Illuminate\Database\Eloquent\Model|null */
+		/**
+		 * @var string|\Illuminate\Database\Eloquent\Model|null
+		 * @psalm-var class-string<T>|null
+		 */
 		protected $model = null;
 
-		/** @var \Illuminate\Database\Eloquent\Model|null */
+		/**
+		 * @var \Illuminate\Database\Eloquent\Model|null
+		 * @psalm-var T|null
+		 */
 		protected $instance = null;
 
 		/** @var \Codification\Common\Database\Schema\Builder */
 		protected $schema;
 
+		/**
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
+		 * @throws \Codification\Common\Support\Exceptions\ReferenceException
+		 */
 		public function __construct()
 		{
 			if ($this->model !== null)
@@ -33,16 +47,24 @@ namespace Codification\Common\Database\Migrations
 
 			if ($this->table === null)
 			{
-				throw new \UnexpectedValueException('$this->table === null');
+				throw new Exceptions\ReferenceException('$this->table');
 			}
 
 			if ($this->connection === null)
 			{
-				throw new \UnexpectedValueException('$this->connection === null');
+				throw new Exceptions\ReferenceException('$this->connection');
 			}
 
-			/** @var \Illuminate\Database\DatabaseManager $db */
-			$db         = ContainerUtils::resolve('db');
+			try
+			{
+				/** @var \Illuminate\Database\DatabaseManager $db */
+				$db = ContainerUtils::resolve('db');
+			}
+			catch (Exceptions\ResolutionException $e)
+			{
+				throw new Exceptions\ShouldNotHappenException('Failed to resolve [db]', $e->getPrevious());
+			}
+
 			$connection = $db->connection($this->connection);
 
 			$this->schema = new Builder($connection, $this->table, $this->model, $this->instance);

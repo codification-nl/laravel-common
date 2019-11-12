@@ -9,20 +9,26 @@ namespace Codification\Common\Support
 	final class ContainerUtils
 	{
 		/**
+		 * @template     T
 		 * @param string $abstract
 		 *
 		 * @return mixed
+		 * @psalm-return T
+		 * @throws \Codification\Common\Support\Exceptions\ResolutionException
 		 */
 		public static function resolve(string $abstract)
 		{
 			try
 			{
-				return Container::getInstance()->make($abstract);
+				/** @psalm-var T $container */
+				$container = Container::getInstance()->make($abstract);
 			}
 			catch (BindingResolutionException $e)
 			{
-				throw new \RuntimeException("Failed to resolve [$abstract] container", 0, $e->getPrevious());
+				throw new Exceptions\ResolutionException($abstract, $e->getPrevious());
 			}
+
+			return $container;
 		}
 
 		/**
@@ -31,6 +37,7 @@ namespace Codification\Common\Support
 		 *
 		 * @return string
 		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public static function resolveLocale(string $locale = null, int $case = CASE_LOWER) : string
 		{
@@ -38,8 +45,16 @@ namespace Codification\Common\Support
 
 			if ($locale === null)
 			{
-				/** @var \Illuminate\Foundation\Application $app */
-				$app    = static::resolve('app');
+				try
+				{
+					/** @var \Illuminate\Foundation\Application $app */
+					$app = static::resolve('app');
+				}
+				catch (Exceptions\ResolutionException $e)
+				{
+					throw new Exceptions\ShouldNotHappenException('Failed to resolve [app]', $e);
+				}
+
 				$locale = $app->getLocale();
 			}
 
@@ -47,14 +62,11 @@ namespace Codification\Common\Support
 
 			switch ($case)
 			{
-				case CASE_LOWER:
-					return strtolower($locale);
-
 				case CASE_UPPER:
 					return strtoupper($locale);
 
 				default:
-					throw new \UnexpectedValueException();
+					return strtolower($locale);
 			}
 		}
 	}

@@ -2,26 +2,39 @@
 
 namespace Codification\Common\Phone
 {
-	use Codification\Common\Enums\Enum;
+	use Codification\Common\Enum;
 
 	/**
-	 * @method static PhoneType|int NONE()
-	 * @method static PhoneType|int FIXED()
-	 * @method static PhoneType|int MOBILE()
-	 * @method static PhoneType|int BOTH()
+	 * @method static PhoneType NONE()
+	 * @method static PhoneType FIXED()
+	 * @method static PhoneType MOBILE()
+	 * @method static PhoneType BOTH()
+	 *
+	 * @template-extends \Codification\Common\Enum\Enum<int>
 	 */
-	final class PhoneType extends Enum
+	final class PhoneType extends Enum\Enum
 	{
-		use \Codification\Common\Enums\EnumFlags;
+		use Enum\EnumFlags;
 
+		/**
+		 * @var array<int, string>
+		 * @psalm-var list<string>
+		 */
 		protected static $hidden = [
 			'NONE',
 			'BOTH',
 		];
 
-		public const NONE   = 0;
-		public const FIXED  = 1 << 0;
+		/** @var int */
+		public const NONE = 0;
+
+		/** @var int */
+		public const FIXED = 1 << 0;
+
+		/** @var int */
 		public const MOBILE = 1 << 1;
-		public const BOTH   = PhoneType::FIXED | PhoneType::MOBILE;
+
+		/** @var int */
+		public const BOTH = PhoneType::FIXED | PhoneType::MOBILE;
 	}
 }

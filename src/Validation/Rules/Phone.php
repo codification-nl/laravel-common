@@ -7,13 +7,17 @@ namespace Codification\Common\Validation\Rules
 	use Codification\Common\Validation\Contracts\ValidatorRuleReplacer;
 	use Illuminate\Validation\Validator;
 
+	/**
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string>
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRuleReplacer<string[]>
+	 */
 	class Phone implements ValidatorRule, ValidatorRuleReplacer
 	{
 		/** @var string|null */
-		protected $countryField;
+		protected $countryField = null;
 
-		/** @var PhoneType */
-		protected $type;
+		/** @var PhoneType|null */
+		protected $type = null;
 
 		/**
 		 * @param string|null $country_field = null
@@ -60,11 +64,15 @@ namespace Codification\Common\Validation\Rules
 
 		/**
 		 * @param string                           $attribute
-		 * @param mixed                            $value
+		 * @param string                           $value
 		 * @param string[]                         $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Enum\Exceptions\EnumException
+		 * @throws \Codification\Common\Enum\Exceptions\ValueException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function validate(string $attribute, $value, array $parameters, Validator $validator) : bool
 		{
@@ -73,6 +81,7 @@ namespace Codification\Common\Validation\Rules
 			$target = $validator->getData();
 			$key    = sanitize($country_field) ?? "{$attribute}_country";
 
+			/** @var string|null $region_code */
 			$region_code = data_get($target, $key, null);
 			$region_code = sanitize($region_code);
 
@@ -81,10 +90,11 @@ namespace Codification\Common\Validation\Rules
 				return false;
 			}
 
-			$type = intval($type);
-			$type = PhoneType::make($type);
-
-			return \Codification\Common\Phone\Phone::validate($value, $region_code, $type);
+			return \Codification\Common\Phone\Phone::validate(
+				$value,
+				$region_code,
+				PhoneType::make(intval($type))
+			);
 		}
 
 		/**
@@ -103,13 +113,16 @@ namespace Codification\Common\Validation\Rules
 			$target = $validator->getData();
 			$key    = sanitize($country_field) ?? "{$attribute}_country";
 
+			/** @var string|null $region_code */
 			$region_code = data_get($target, $key, null);
 			$region_code = sanitize($region_code);
 
-			/** @var string $string */
-			$string = str_replace(':country', $region_code, $message);
+			if ($region_code !== null)
+			{
+				$message = str_replace(':country', $region_code, $message);
+			}
 
-			return $string;
+			return $message;
 		}
 
 		/**

@@ -3,6 +3,7 @@
 namespace Codification\Common\Money
 {
 	use Codification\Common\Support\ContainerUtils;
+	use Codification\Common\Support\Exceptions\ShouldNotHappenException;
 	use Money\Currencies\ISOCurrencies;
 	use Money\Currency;
 	use Money\Formatter\DecimalMoneyFormatter;
@@ -13,7 +14,7 @@ namespace Codification\Common\Money
 
 	final class MoneyUtils
 	{
-		/** @var \Codification\Common\Money\MoneyUtils */
+		/** @var \Codification\Common\Money\MoneyUtils|null */
 		private static $instance = null;
 
 		/** @var \Money\Currencies\ISOCurrencies */
@@ -25,15 +26,18 @@ namespace Codification\Common\Money
 		/** @var \Money\Parser\DecimalMoneyParser */
 		private $decimalParser;
 
-		/** @var \Money\Parser\AggregateMoneyParser[] */
+		/** @var array<string, \Money\Parser\AggregateMoneyParser> */
 		private $parsers = [];
 
-		/** @var \Money\Formatter\IntlMoneyFormatter[] */
+		/** @var array<string, \Money\Formatter\IntlMoneyFormatter> */
 		private $formatters = [];
 
-		/** @var \Money\Currency[] */
+		/** @var array<string, \Money\Currency> */
 		private $currencies = [];
 
+		/**
+		 * MoneyUtils constructor.
+		 */
 		private function __construct()
 		{
 			$this->isoCurrencies    = new ISOCurrencies();
@@ -42,7 +46,7 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @return $this
+		 * @return static
 		 */
 		public static function getInstance() : self
 		{
@@ -58,20 +62,36 @@ namespace Codification\Common\Money
 		 * @param \Money\Money $instance
 		 *
 		 * @return int
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 */
 		public function getCurrencyCode(\Money\Money $instance) : int
 		{
-			return $this->isoCurrencies->numericCodeFor($instance->getCurrency());
+			try
+			{
+				return $this->isoCurrencies->numericCodeFor($instance->getCurrency());
+			}
+			catch (\Money\Exception\UnknownCurrencyException $e)
+			{
+				throw new Exceptions\CurrencyCodeException();
+			}
 		}
 
 		/**
 		 * @param \Money\Money $instance
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 */
 		public function format(\Money\Money $instance) : string
 		{
-			return $this->decimalFormatter->format($instance);
+			try
+			{
+				return $this->decimalFormatter->format($instance);
+			}
+			catch (\Money\Exception\UnknownCurrencyException $e)
+			{
+				throw new Exceptions\CurrencyCodeException();
+			}
 		}
 
 		/**
@@ -79,10 +99,20 @@ namespace Codification\Common\Money
 		 * @param string|null  $locale = null
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function humanize(\Money\Money $instance, string $locale = null) : string
 		{
-			return $this->getFormatter($locale)->format($instance);
+			try
+			{
+				return $this->getFormatter($locale)->format($instance);
+			}
+			catch (\Money\Exception\UnknownCurrencyException $e)
+			{
+				throw new Exceptions\CurrencyCodeException();
+			}
 		}
 
 		/**
@@ -90,6 +120,7 @@ namespace Codification\Common\Money
 		 *
 		 * @return \Money\Currency
 		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		private function getCurrency(string $code) : Currency
 		{
@@ -104,7 +135,14 @@ namespace Codification\Common\Money
 
 			if (!array_key_exists($code, $this->currencies))
 			{
-				$currency = new Currency($code);
+				try
+				{
+					$currency = new Currency($code);
+				}
+				catch (\InvalidArgumentException $e)
+				{
+					throw new ShouldNotHappenException('Failed to instantiate [Currency]', $e);
+				}
 
 				if (!$this->isoCurrencies->contains($currency))
 				{
@@ -122,6 +160,7 @@ namespace Codification\Common\Money
 		 *
 		 * @return \Money\Parser\AggregateMoneyParser
 		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		private function getParser(string $locale = null) : AggregateMoneyParser
 		{
@@ -132,10 +171,17 @@ namespace Codification\Common\Money
 				$formatter   = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
 				$intl_parser = new IntlLocalizedDecimalParser($formatter, $this->isoCurrencies);
 
-				$this->parsers[$locale] = new AggregateMoneyParser([
-					$this->decimalParser,
-					$intl_parser,
-				]);
+				try
+				{
+					$this->parsers[$locale] = new AggregateMoneyParser([
+						$this->decimalParser,
+						$intl_parser,
+					]);
+				}
+				catch (\InvalidArgumentException $e)
+				{
+					throw new ShouldNotHappenException('Failed to instantiate parser', $e);
+				}
 			}
 
 			return $this->parsers[$locale];
@@ -146,6 +192,7 @@ namespace Codification\Common\Money
 		 *
 		 * @return \Money\Formatter\IntlMoneyFormatter
 		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		private function getFormatter(string $locale = null) : IntlMoneyFormatter
 		{
@@ -163,13 +210,16 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param string|float|int       $value
+		 * @param string|float|int|null  $value
+		 * @psalm-param numeric|null     $value
 		 * @param string|\Money\Currency $currency
 		 * @param string|null            $locale = null
 		 *
 		 * @return \Money\Money
 		 * @throws \Codification\Common\Money\Exceptions\CurrencyCodeException
 		 * @throws \Codification\Common\Country\Exceptions\CountryCodeException
+		 * @throws \Codification\Common\Money\Exceptions\ParseException
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public function parse($value, $currency, string $locale = null) : ?\Money\Money
 		{
@@ -185,7 +235,14 @@ namespace Codification\Common\Money
 				$currency = $this->getCurrency($currency);
 			}
 
-			return $this->getParser($locale)->parse($value, $currency);
+			try
+			{
+				return $this->getParser($locale)->parse($value, $currency);
+			}
+			catch (\Money\Exception\ParserException $e)
+			{
+				throw new Exceptions\ParseException($value, $e->getPrevious());
+			}
 		}
 	}
 }

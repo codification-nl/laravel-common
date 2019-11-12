@@ -2,19 +2,33 @@
 
 namespace Codification\Common\Database\Eloquent
 {
+	use Codification\Common\Support\Exceptions\ShouldNotHappenException;
+	use Illuminate\Database\Eloquent\MassAssignmentException;
+
+	/** @psalm-suppress PropertyNotSetInConstructor */
 	abstract class Model extends \Illuminate\Database\Eloquent\Model
 	{
-		/** @var string[][] */
+		/** @var array<class-string, list<callable-string>> */
 		protected static $traitAccessors = [];
 
-		/** @var string[][] */
+		/** @var array<class-string, list<callable-string>> */
 		protected static $traitMutators = [];
 
-		/** @var string[][] */
+		/** @var array<class-string, list<callable-string>> */
 		protected static $traitCasts = [];
 
 		/**
+		 * @return string
+		 * @psalm-return class-string<\Codification\Common\Database\Eloquent\Model>
+		 */
+		public function getClass() : string
+		{
+			return static::class;
+		}
+
+		/**
 		 * @param array|false $attributes
+		 * @throws \Illuminate\Database\Eloquent\MassAssignmentException
 		 */
 		public function __construct($attributes = [])
 		{
@@ -37,7 +51,10 @@ namespace Codification\Common\Database\Eloquent
 			static::$traitMutators[$class]  = [];
 			static::$traitCasts[$class]     = [];
 
-			foreach (class_uses_recursive($class) as $trait)
+			/** @var array<trait-string> $traits */
+			$traits = class_uses_recursive($class);
+
+			foreach ($traits as $trait)
 			{
 				$name = class_basename($trait);
 
@@ -65,14 +82,6 @@ namespace Codification\Common\Database\Eloquent
 		/**
 		 * @return string
 		 */
-		public function getClass() : string
-		{
-			return static::class;
-		}
-
-		/**
-		 * @return string
-		 */
 		public function getQualifiedTable() : string
 		{
 			return "{$this->getConnectionName()}.{$this->getTable()}";
@@ -87,13 +96,14 @@ namespace Codification\Common\Database\Eloquent
 		{
 			$type = parent::getCastType($key);
 
-			foreach (static::$traitCasts[static::class] as $method)
+			foreach (static::$traitCasts[$this->getClass()] as $method)
 			{
+				/** @var string $custom */
 				$custom = $this->{$method}();
 
 				if (strncmp($type, $custom, strlen($custom)) === 0)
 				{
-					return /** @var string $custom */ $custom;
+					return $custom;
 				}
 			}
 
@@ -101,15 +111,18 @@ namespace Codification\Common\Database\Eloquent
 		}
 
 		/**
+		 * @template     V
 		 * @param string $key
 		 *
 		 * @return mixed
+		 * @psalm-return V
 		 */
 		public function getAttributeValue($key)
 		{
+			/** @psalm-var V $value */
 			$value = parent::getAttributeValue($key);
 
-			foreach (static::$traitAccessors[static::class] as $method)
+			foreach (static::$traitAccessors[$this->getClass()] as $method)
 			{
 				if ($this->{$method}($key, $value))
 				{
@@ -121,14 +134,16 @@ namespace Codification\Common\Database\Eloquent
 		}
 
 		/**
+		 * @template     V
 		 * @param string $key
 		 * @param mixed  $value
+		 * @psalm-param  V $value
 		 *
 		 * @return mixed
 		 */
 		public function setAttribute($key, $value)
 		{
-			foreach (static::$traitMutators[static::class] as $method)
+			foreach (static::$traitMutators[$this->getClass()] as $method)
 			{
 				if ($this->{$method}($key, $value))
 				{
@@ -140,11 +155,19 @@ namespace Codification\Common\Database\Eloquent
 		}
 
 		/**
-		 * @return $this
+		 * @return static
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public static function dummy() : self
 		{
-			return new static(false);
+			try
+			{
+				return new static(false);
+			}
+			catch (MassAssignmentException $e)
+			{
+				throw new ShouldNotHappenException('Failed to instantiate dummy', $e);
+			}
 		}
 	}
 }

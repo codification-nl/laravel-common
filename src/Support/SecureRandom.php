@@ -2,6 +2,8 @@
 
 namespace Codification\Common\Support
 {
+	use Codification\Common\Url\UrlSafe;
+
 	final class SecureRandom
 	{
 		/**
@@ -9,6 +11,7 @@ namespace Codification\Common\Support
 		 * @param bool $padding = false
 		 *
 		 * @return string
+		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */
 		public static function urlsafe_base64(int $length = 16, bool $padding = false) : string
 		{
@@ -18,7 +21,7 @@ namespace Codification\Common\Support
 			}
 			catch (\Exception $e)
 			{
-				throw new \RuntimeException('Failed to generate random bytes', 0, $e->getPrevious());
+				throw new Exceptions\ShouldNotHappenException('Failed to generate random bytes', $e);
 			}
 		}
 	}

@@ -2,17 +2,25 @@
 
 namespace Codification\Common\Country
 {
+	use Codification\Common\Support\Contracts\Bindable;
 	use League\ISO3166\ISO3166;
 
-	final class Country
+	final class Country implements Bindable
 	{
 		/**
-		 * @param null|string $country_code
+		 * @param string|null $country_code
 		 *
 		 * @return bool
 		 */
-		public static function isValid(?string $country_code) : bool
+		public static function isValid($country_code) : bool
 		{
+			$country_code = sanitize($country_code);
+
+			if ($country_code === null)
+			{
+				return false;
+			}
+
 			try
 			{
 				(new ISO3166())->alpha2($country_code);

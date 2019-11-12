@@ -6,6 +6,9 @@ namespace Codification\Common\Validation\Rules
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Illuminate\Validation\Validator;
 
+	/**
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string>
+	 */
 	class Period implements ValidatorRule
 	{
 		/**
@@ -18,7 +21,7 @@ namespace Codification\Common\Validation\Rules
 
 		/**
 		 * @param string                           $attribute
-		 * @param mixed                            $value
+		 * @param string                           $value
 		 * @param string[]                         $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *

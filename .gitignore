@@ -1,5 +1,6 @@
 /.idea
 /vendor
+/lsp
 
 composer.lock
 .phpunit.result.cache

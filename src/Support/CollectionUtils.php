@@ -5,19 +5,25 @@ namespace Codification\Common\Support
 	use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 	use Illuminate\Pagination\Paginator;
 
-	/**
-	 * @mixin \Illuminate\Support\Collection
-	 */
 	final class CollectionUtils
 	{
-		public function paginate()
+		/**
+		 * @return \Closure
+		 * @psalm-return \Closure(int=,list<string>=,string=,int=):\Illuminate\Contracts\Pagination\LengthAwarePaginator
+		 */
+		public function paginate() : \Closure
 		{
 			return function (int $per_page = null, array $columns = ['*'], string $page_name = 'page', int $page = null) : LengthAwarePaginator
 				{
-					$first = $this->first();
+					/** @var \Illuminate\Support\Collection $self */
+					$self = $this;
+
+					/** @var object $first */
+					$first = $self->first();
 
 					if ($per_page === null)
 					{
+						/** @var int $per_page */
 						$per_page = method_exists($first, 'getPerPage') ? $first->getPerPage() : 15;
 					}
 
@@ -26,8 +32,8 @@ namespace Codification\Common\Support
 						$page = Paginator::resolveCurrentPage($page_name);
 					}
 
-					$results = $this->forPage($page, $per_page);
-					$total   = $this->count();
+					$results = $self->forPage($page, $per_page);
+					$total   = $self->count();
 
 					if (!in_array('*', $columns, true))
 					{

@@ -13,8 +13,10 @@ namespace Codification\Common\Validation
 		}
 
 		/**
-		 * @param string|\Codification\Common\Enums\Enum $enum
-		 * @param bool                                   $strict = true
+		 * @template    V of int|string
+		 * @param string|\Codification\Common\Enum\Enum $enum
+		 * @psalm-param class-string<\Codification\Common\Enum\Enum<V>> $enum
+		 * @param bool                                  $strict = true
 		 *
 		 * @return \Codification\Common\Validation\Rules\Enum
 		 */

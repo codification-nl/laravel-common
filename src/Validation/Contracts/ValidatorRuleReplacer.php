@@ -4,6 +4,9 @@ namespace Codification\Common\Validation\Contracts
 {
 	use Illuminate\Validation\Validator;
 
+	/**
+	 * @template TParameters
+	 */
 	interface ValidatorRuleReplacer
 	{
 		/**
@@ -11,6 +14,7 @@ namespace Codification\Common\Validation\Contracts
 		 * @param string                           $attribute
 		 * @param string                           $rule
 		 * @param string[]                         $parameters
+		 * @psalm-param TParameters                $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return string

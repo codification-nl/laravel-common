@@ -6,10 +6,13 @@ namespace Codification\Common\Validation\Rules
 	use Codification\Common\Validation\Contracts\ValidatorRule;
 	use Illuminate\Validation\Validator;
 
+	/**
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string>
+	 */
 	class Interval implements ValidatorRule
 	{
 		/** @var bool */
-		protected $allowEmpty;
+		protected $allowEmpty = false;
 
 		/**
 		 * @param bool $allow_empty = false
@@ -27,7 +30,7 @@ namespace Codification\Common\Validation\Rules
 
 		/**
 		 * @param string                           $attribute
-		 * @param mixed                            $value
+		 * @param string                           $value
 		 * @param string[]                         $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
@@ -37,7 +40,7 @@ namespace Codification\Common\Validation\Rules
 		{
 			try
 			{
-				$interval = CarbonInterval::create($value);
+				$interval = CarbonInterval::fromString($value);
 			}
 			catch (\Exception $e)
 			{
