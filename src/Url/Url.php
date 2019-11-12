@@ -40,7 +40,7 @@ namespace Codification\Common\Url
 
 		/**
 		 * @param string                                     $url
-		 * @param \Codification\Common\Url\UrlParseFlags|int $flags
+		 * @param \Codification\Common\Url\UrlParseFlags|int $flags = UrlParseFlags::ALL
 		 *
 		 * @return \Codification\Common\Url\Url
 		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
@@ -88,7 +88,7 @@ namespace Codification\Common\Url
 
 		/**
 		 * @param string                                     $url
-		 * @param \Codification\Common\Url\UrlParseFlags|int $flags
+		 * @param \Codification\Common\Url\UrlParseFlags|int $flags = UrlParseFlags::ALL
 		 *
 		 * @return string
 		 * @throws \Codification\Common\Enum\Exceptions\EnumException

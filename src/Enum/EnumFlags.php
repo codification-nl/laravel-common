@@ -33,10 +33,7 @@ namespace Codification\Common\Enum
 			/** @var int $result */
 			$result = array_reduce($value, function (int $result, string $string) : int
 				{
-					/**
-					 * @var \Codification\Common\Enum\Enum $enum
-					 * @psalm-var \Codification\Common\Enum\Enum<int> $enum
-					 */
+					/** @psalm-var \Codification\Common\Enum\Enum<int> $enum */
 					$enum = static::parse($string);
 
 					return $result | $enum->value;
@@ -99,12 +96,9 @@ namespace Codification\Common\Enum
 		 */
 		public function has($enum) : bool
 		{
-			/** @psalm-var int $value */
-			$value = $this->value;
-
 			static::assertType($enum);
 
-			return (($value & $enum->value) != 0);
+			return (($this->value & $enum->value) != 0);
 		}
 
 		/**
@@ -164,12 +158,9 @@ namespace Codification\Common\Enum
 		{
 			foreach ($enums as $enum)
 			{
-				/** @psalm-var int $value */
-				$value = $this->value;
-
 				static::assertType($enum);
 
-				$this->value = $op($value, $enum->value);
+				$this->value = $op($this->value, $enum->value);
 			}
 
 			return $this;

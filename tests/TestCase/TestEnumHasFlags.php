@@ -10,6 +10,8 @@ namespace Codification\Common\Test\TestCase
 	 * @method static TestEnumHasFlags SECOND()
 	 * @method static TestEnumHasFlags THIRD()
 	 * @method static TestEnumHasFlags BOTH()
+	 *
+	 * @template-extends \Codification\Common\Enum\Enum<int>
 	 */
 	class TestEnumHasFlags extends Enum\Enum
 	{

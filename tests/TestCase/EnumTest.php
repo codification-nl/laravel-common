@@ -255,13 +255,7 @@ namespace Codification\Common\Test\TestCase
 		 */
 		public function it_can_make_flags_combination() : void
 		{
-			/** @var int $second */
-			$second = TestEnumHasFlags::SECOND;
-
-			/** @var int $third */
-			$third = TestEnumHasFlags::THIRD;
-
-			$object = TestEnumHasFlags::make($second | $third);
+			$object = TestEnumHasFlags::make(TestEnumHasFlags::SECOND | TestEnumHasFlags::THIRD);
 			static::assertNotTrue($object->has(TestEnumHasFlags::FIRST()));
 			static::assertTrue($object->has(TestEnumHasFlags::THIRD()));
 		}

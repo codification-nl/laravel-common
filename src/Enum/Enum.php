@@ -8,9 +8,8 @@ namespace Codification\Common\Enum
 
 	/**
 	 * @template T of array-key
-	 * @template-implements \Codification\Common\Enum\Contracts\Enum<T>
 	 */
-	abstract class Enum implements Stringable, Contracts\Enum
+	abstract class Enum implements Stringable
 	{
 		/**
 		 * @var int|string

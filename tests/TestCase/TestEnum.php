@@ -10,6 +10,8 @@ namespace Codification\Common\Test\TestCase
 	 * @method static TestEnum HELLO_ALSO()
 	 * @method static TestEnum WORLD()
 	 * @method static TestEnum FOO()
+	 *
+	 * @template-extends \Codification\Common\Enum\Enum<string>
 	 */
 	class TestEnum extends Enum\Enum
 	{

@@ -6,6 +6,8 @@ namespace Codification\Common\Test\TestCase
 
 	/**
 	 * @method static TestEnumFooBar HELLO()
+	 *
+	 * @template-extends \Codification\Common\Enum\Enum<string>
 	 */
 	class TestEnumFooBar extends Enum\Enum
 	{
