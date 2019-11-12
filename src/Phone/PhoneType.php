@@ -17,7 +17,7 @@ namespace Codification\Common\Phone
 		use Enum\EnumFlags;
 
 		/**
-		 * @var array<int, string>
+		 * @var string[]
 		 * @psalm-var list<string>
 		 */
 		protected static $hidden = [

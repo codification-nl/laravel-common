@@ -8,8 +8,8 @@ namespace Codification\Common\Validation\Rules
 	use Illuminate\Validation\Validator;
 
 	/**
-	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string>
-	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRuleReplacer<string[]>
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<list<string>, string>
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRuleReplacer<list<string>>
 	 */
 	class Phone implements ValidatorRule, ValidatorRuleReplacer
 	{
@@ -66,6 +66,7 @@ namespace Codification\Common\Validation\Rules
 		 * @param string                           $attribute
 		 * @param string                           $value
 		 * @param string[]                         $parameters
+		 * @psalm-param list<string>               $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool
@@ -102,6 +103,7 @@ namespace Codification\Common\Validation\Rules
 		 * @param string                           $attribute
 		 * @param string                           $rule
 		 * @param string[]                         $parameters
+		 * @psalm-param list<string>               $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return string

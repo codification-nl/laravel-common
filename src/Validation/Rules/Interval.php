@@ -7,7 +7,7 @@ namespace Codification\Common\Validation\Rules
 	use Illuminate\Validation\Validator;
 
 	/**
-	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string>
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<list<string>, string>
 	 */
 	class Interval implements ValidatorRule
 	{
@@ -32,6 +32,7 @@ namespace Codification\Common\Validation\Rules
 		 * @param string                           $attribute
 		 * @param string                           $value
 		 * @param string[]                         $parameters
+		 * @psalm-param list<string>               $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool

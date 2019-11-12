@@ -21,7 +21,10 @@ namespace Codification\Common\Enum
 		/** @var array<string, array<string, array-key>> */
 		protected static $cache = [];
 
-		/** @var string[] */
+		/**
+		 * @var string[]
+		 * @psalm-var list<string>
+		 */
 		protected static $hidden = [];
 
 		/**
@@ -128,22 +131,29 @@ namespace Codification\Common\Enum
 
 		/**
 		 * @template     V of array-key
-		 * @return int|string[]
-		 * @psalm-return V[]
+		 * @return int[]|string[]
+		 * @psalm-return list<V>
 		 * @throws \Codification\Common\Enum\Exceptions\EnumException
 		 */
 		public static function values() : array
 		{
-			return array_values(static::toArray());
+			/** @psalm-var list<V> $values */
+			$values = array_values(static::toArray());
+
+			return $values;
 		}
 
 		/**
 		 * @return string[]
+		 * @psalm-return list<string>
 		 * @throws \Codification\Common\Enum\Exceptions\EnumException
 		 */
 		public static function keys() : array
 		{
-			return array_diff(array_keys(static::toArray()), static::$hidden);
+			/** @psalm-var list<string> $keys */
+			$keys = array_diff(array_keys(static::toArray()), static::$hidden);
+
+			return $keys;
 		}
 
 		/**
@@ -203,7 +213,7 @@ namespace Codification\Common\Enum
 
 		/**
 		 * @template    V of array-key
-		 * @param mixed $value
+		 * @param mixed|string[] $value
 		 * @psalm-param V|list<string> $value
 		 *
 		 * @return static
@@ -212,7 +222,10 @@ namespace Codification\Common\Enum
 		 */
 		public static function make($value) : self
 		{
-			return new static(static::initializeTraits($value));
+			/** @psalm-var V $value */
+			$value = static::initializeTraits($value);
+
+			return new static($value);
 		}
 
 		/**
@@ -265,7 +278,10 @@ namespace Codification\Common\Enum
 		 */
 		private static function initializeTraits($value)
 		{
-			return static::forward($value, 'initialize');
+			/** @psalm-var V $result */
+			$result = static::forward($value, 'initialize');
+
+			return $result;
 		}
 
 		/**
@@ -299,6 +315,7 @@ namespace Codification\Common\Enum
 		 */
 		public static function parse(string $name) : self
 		{
+			/** @psalm-var array<string, V> $values */
 			$values = static::toArray();
 
 			if (!array_key_exists($name, $values))

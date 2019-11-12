@@ -6,7 +6,7 @@ namespace Codification\Common\Validation\Rules
 	use Illuminate\Validation\Validator;
 
 	/**
-	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<string[], string|null>
+	 * @template-implements \Codification\Common\Validation\Contracts\ValidatorRule<list<string>, string|null>
 	 */
 	class Country implements ValidatorRule
 	{
@@ -22,6 +22,7 @@ namespace Codification\Common\Validation\Rules
 		 * @param string                           $attribute
 		 * @param string|null                      $value
 		 * @param string[]                         $parameters
+		 * @psalm-param list<string>               $parameters
 		 * @param \Illuminate\Validation\Validator $validator
 		 *
 		 * @return bool

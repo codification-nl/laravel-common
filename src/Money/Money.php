@@ -168,7 +168,7 @@ namespace Codification\Common\Money
 		private static function call($function, array $parameters)
 		{
 			/**
-			 * @var array<int, mixed> $params
+			 * @var mixed[] $params
 			 * @psalm-var list $params
 			 */
 			$params = static::unwrap($parameters);
@@ -180,10 +180,10 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param mixed|array<int, mixed> $value
+		 * @param mixed|mixed[] $value
 		 * @psalm-var    mixed|list $value
 		 *
-		 * @return mixed|array<int, mixed>
+		 * @return mixed|mixed[]
 		 * @psalm-return mixed|list
 		 */
 		private static function wrap($value)
@@ -210,10 +210,10 @@ namespace Codification\Common\Money
 		}
 
 		/**
-		 * @param mixed|array<int, mixed> $value
+		 * @param mixed|mixed[] $value
 		 * @psalm-var    mixed|list $value
 		 *
-		 * @return mixed|array<int, mixed>
+		 * @return mixed|mixed[]
 		 * @psalm-return mixed|list
 		 * @throws \Codification\Common\Support\Exceptions\ShouldNotHappenException
 		 */

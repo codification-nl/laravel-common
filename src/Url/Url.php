@@ -58,7 +58,10 @@ namespace Codification\Common\Url
 
 			$result = new static();
 
-			foreach (UrlPart::values() as $part)
+			/** @psalm-var list<string> $parts */
+			$parts = UrlPart::values();
+
+			foreach ($parts as $part)
 			{
 				switch ($part)
 				{
